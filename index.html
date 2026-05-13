@@ -12,9 +12,25 @@
 
 body{
   margin:0;
-  background:#f7f3eb;
+  /* 全体の背景をやわらかい水色に */
+  background: #e0f2f7; 
   color:#2b2b2b;
   font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  overflow-x: hidden;
+}
+
+/* 背景の装飾（白い水たまり） */
+body::before {
+  content: "";
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+  z-index: -1;
+  filter: blur(60px);
+  pointer-events: none;
 }
 
 /* ===== TOPBAR ===== */
@@ -27,328 +43,217 @@ body{
   justify-content:space-between;
   align-items:center;
   padding:20px 22px;
-  background:rgba(247,243,235,0.92);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(0,0,0,0.06);
+  background:rgba(255, 255, 255, 0.4);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(255, 255, 255, 0.5);
   z-index:1000;
 }
 
 .logo{
   font-size:14px;
-  letter-spacing:0.2em;
+  letter-spacing:0.25em;
+  font-weight: 500;
+  color: #4a6a7a;
 }
 
+/* メニューボタンをしずくの形に */
 .menu-btn{
-  font-size:22px;
-  cursor:pointer;
-  user-select:none;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.4s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.8);
+}
+
+.menu-btn:hover {
+  border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%;
+  background: #fff;
 }
 
 /* ===== LAYOUT ===== */
 .container{
   max-width:760px;
   margin:auto;
-  padding:120px 20px 120px;
+  padding:140px 20px 120px;
 }
 
-/* ===== HERO ===== */
 .hero h1{
-  font-size:40px;
+  font-size:32px;
   font-weight:400;
   margin:0;
-}
-
-/* ===== TAGS ===== */
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.tag{
-  background:#fff;
-  border:1px solid #ddd3c7;
-  padding:6px 12px;
-  border-radius:999px;
-  font-size:12px;
-  line-height:1.3;
-}
-
-.tag.soft{
-  background:rgba(255,255,255,0.8);
-  color:#6f665b;
+  letter-spacing: 0.15em;
+  text-align: center;
+  color: #4a6a7a;
 }
 
 /* ===== SECTION ===== */
 .section{
-  margin-top:70px;
+  margin-top:80px;
 }
 
 .section-title{
-  font-size:20px;
-  margin-bottom:20px;
+  font-size:16px;
+  margin-bottom:28px;
+  color: #5a7a8a;
+  text-align: center;
+  letter-spacing: 0.1em;
 }
 
-/* ===== RESULTS HEAD ===== */
-.results-head{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:16px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-}
-
-.results-head .section-title{
-  margin:0;
-}
-
-.tags-inline{
-  margin:0;
-  justify-content:flex-end;
-}
-
-/* ===== GRID ===== */
+/* ===== GRID & CARDS (白基調のしずく) ===== */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
 }
 
-@media (min-width:768px){
-  .grid{
-    grid-template-columns:repeat(3,1fr);
-  }
+@media (max-width:480px){
+  .grid{ grid-template-columns:repeat(2,1fr); }
 }
 
-/* ===== CARD ===== */
 .card{
   aspect-ratio:1/1;
-  background:rgba(255,255,255,0.7);
-  border:1px solid #e0d6c9;
-  border-radius:24px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%; 
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  transition:.2s;
+  transition:all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   text-align:center;
-  padding:16px;
+  padding:12px;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
 .card:hover{
-  transform:translateY(-2px);
-  background:rgba(255,255,255,0.92);
+  background:rgba(255,255,255,1);
+  transform: translateY(-4px);
+  border-radius: 48% 52% 50% 50% / 50% 50% 48% 52%;
 }
 
 .card.active{
-  background:#e8dfd3;
-  border-color: #c4b8a7;
+  background: #ffffff;
+  border-color: #a0d8ef;
+  color: #3a5a6a;
+  border-radius: 50% 50% 48% 52% / 52% 48% 52% 48% !important;
+  box-shadow: 0 0 0 0px rgba(160, 216, 239, 0.5);
+  animation: ripple 2.5s infinite;
 }
 
-/* ===== SEARCH & MENU CONTENT ===== */
-.search{
-  width:100%;
-  padding:18px;
-  border-radius:24px;
-  border:1px solid #ddd5ca;
-  outline:none;
-  background:white;
-  font-size:15px;
-  margin-bottom:18px;
-  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+@keyframes ripple {
+  0% { box-shadow: 0 0 0 0px rgba(160, 216, 239, 0.4); }
+  100% { box-shadow: 0 0 0 15px rgba(160, 216, 239, 0); }
 }
 
-.search-results{
-  margin-top:10px;
-}
-
-.search-result{
-  display: flex;
-  gap: 12px;
+/* ===== RESULTS ===== */
+.results-head{
+  display:flex;
+  justify-content:space-between;
   align-items: center;
-  padding:12px 0;
-  border-bottom:1px solid #e5dfd5;
-  cursor:pointer;
-  transition:.2s;
+  margin-bottom:24px;
 }
 
-.search-result:hover{ opacity:.75; }
-
-.search-img{
-  width: 44px;
-  height: 56px;
-  border-radius: 6px;
-  overflow: hidden;
-  background: #f0ede6;
-  flex-shrink: 0;
-}
-
-.search-img img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.search-info{ flex-grow: 1; }
-
-.search-country{
-  font-size:10px;
-  color:#8b8175;
-  margin-bottom:2px;
-}
-
-.search-title{ font-size:15px; line-height: 1.3; }
-
-/* 検索結果なしのスタイル */
-.no-result-box {
-  padding: 20px 0;
-  font-size: 13px;
-  line-height: 1.8;
-  color: #7d7468;
-}
-
-.form-link {
-  display: inline-block;
-  margin-top: 12px;
-  color: #2b2b2b;
-  text-decoration: none;
-  border-bottom: 1px solid #aaa;
-}
-
-/* ===== MENU BUTTONS ===== */
-.today-btn{
-  width:100%;
-  border:none;
-  background:#e8dfd3;
-  color:#2b2b2b;
-  padding:16px 18px;
-  border-radius:20px;
-  font-size:14px;
-  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
-  cursor:pointer;
-  transition:.2s;
-  margin:10px 0 6px;
-}
-
-.today-btn:hover{ background:#ded3c5; }
-
-.menu-link{
-  display:block;
-  margin-top:30px;
-  text-decoration:none;
-  color:#2b2b2b;
-  font-size: 15px;
-}
-
-.menu-note{
+.tag{
+  background:rgba(255,255,255,0.9);
+  border:1px solid rgba(160, 216, 239, 0.3);
+  padding:6px 14px;
+  border-radius:999px;
   font-size:12px;
-  color:#8b8175;
-  line-height:1.7;
-  margin:4px 0 20px;
+  color: #5a7a8a;
 }
 
-/* ===== RESULTS (MAIN FEED) ===== */
-.results{
-  margin-top:0;
-  display:grid;
-  gap:16px;
-}
+.results{ display:grid; gap:20px; }
 
 .movie{
-  background:rgba(255,255,255,0.85);
-  border:1px solid #e0d6c9;
-  border-radius:24px;
-  padding:16px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 30px 60px 40px 70px / 50% 50% 50% 50%;
+  padding:24px;
   display: flex;
-  gap: 16px;
+  gap: 20px;
   align-items: center;
-  animation:fade .35s ease;
-  cursor:pointer;
-  transition:.2s;
+  transition: all 0.5s ease;
+  backdrop-filter: blur(5px);
   text-decoration: none;
   color: inherit;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.02);
 }
 
 .movie:hover{
-  transform:translateY(-2px);
-  background:#fff;
+  background: #fff;
+  transform: scale(1.02);
+  border-radius: 60px 30px 70px 40px / 50% 50% 50% 50%;
 }
 
 .movie-img{
-  width: 70px;
-  height: 90px;
+  width: 74px;
+  height: 100px;
   flex-shrink: 0;
   border-radius: 12px;
   overflow: hidden;
-  background: #f0ede6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.movie-img img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.movie-img img{ width: 100%; height: 100%; object-fit: cover; }
 
-.movie-content{ flex-grow: 1; }
-
-@keyframes fade{
-  from{ opacity:0; transform:translateY(8px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-
-.meta{
-  font-size:11px;
-  color:#8b8175;
-  margin-bottom:6px;
-}
-
-.movie h3{
-  margin:0;
-  font-size:19px;
-  font-weight:400;
-  line-height:1.4;
-}
-
-.empty-state{
-  background:rgba(255,255,255,0.78);
-  border:1px solid #e0d6c9;
-  border-radius:24px;
-  padding:24px;
-  line-height:2;
-  color:#746b60;
-  font-size:14px;
-}
-
-/* ===== MENU PANEL ===== */
+/* ===== MENU & SEARCH ===== */
 .menu{
   position:fixed;
   top:0;
   left:-320px;
   width:320px;
-  max-width:calc(100vw - 24px);
   height:100vh;
-  background:#f5f1e9;
+  background:rgba(255, 255, 255, 0.95);
   padding:120px 28px 60px;
-  transition:.35s;
-  overflow:auto;
+  transition:.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index:2000;
-  box-shadow:8px 0 30px rgba(0,0,0,0.04);
+  overflow-y: auto;
 }
-
 .menu.open{ left:0; }
 
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.08);
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-  z-index:1500;
+.search{
+  width:100%;
+  padding:16px;
+  border-radius:20px;
+  border:1px solid #d0e8f0;
+  background:white;
+  font-family: inherit;
+  outline: none;
 }
 
+.no-result-box {
+  padding: 24px 0;
+  font-size: 13px;
+  color: #8b8175;
+  line-height: 1.8;
+}
+
+.form-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: #4a6a7a;
+  text-decoration: none;
+  border-bottom: 1px solid #a0d8ef;
+}
+
+.today-btn{
+  width:100%; border:none; background:#a0d8ef; color:white; padding:16px; border-radius:25px;
+  font-family: inherit; cursor:pointer; margin-top: 30px; transition: 0.3s;
+}
+.today-btn:hover { background: #8ecbe6; }
+
+.overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.1); opacity:0; pointer-events:none; transition:.3s; z-index:1500; }
 .overlay.show{ opacity:1; pointer-events:auto; }
+
+.empty-state{ padding: 40px; text-align: center; font-size: 14px; color: #5a7a8a; line-height: 2; }
 </style>
 </head>
 
@@ -361,18 +266,12 @@ body{
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
 </div>
 
-<!-- MENU -->
 <div class="menu" id="menu">
-  <!-- 検索窓 -->
   <input class="search" type="text" placeholder="作品名を探す" oninput="searchMovie(this.value)">
   <div class="search-results" id="searchResults"></div>
-
-  <!-- 一覧リンク -->
-  <a href="list.html" class="menu-link">作品一覧</a>
-
-  <!-- 今日の一本 -->
+  <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:15px;">作品一覧</a>
   <button class="today-btn" onclick="recommendToday()">今日の一本</button>
-  <p class="menu-note">今の気分に近い棚から、そっと一作えらびます。</p>
+  <p style="font-size:11px; color:#8b8175; margin-top: 8px; text-align: center;">棚から、そっと一作えらびます。</p>
 </div>
 
 <div class="container">
@@ -381,7 +280,7 @@ body{
   </div>
 
   <div class="section">
-    <div class="section-title">どの国の空気を浴びたいですか？</div>
+    <div class="section-title">どの国の空気にする？</div>
     <div class="grid" id="countryGrid">
       <div class="card" onclick="selectCountry('日本',this)">日本</div>
       <div class="card" onclick="selectCountry('韓国',this)">韓国</div>
@@ -392,7 +291,7 @@ body{
   </div>
 
   <div class="section">
-    <div class="section-title">どんな気分になりたいですか？</div>
+    <div class="section-title">どんな気分になりたい？</div>
     <div class="grid">
       <div class="card" onclick="selectMood('気楽',this)">気楽</div>
       <div class="card" onclick="selectMood('どん底',this)">どん底</div>
@@ -402,7 +301,7 @@ body{
   </div>
 
   <div class="section">
-    <div class="section-title">どんな関係性が好きですか？</div>
+    <div class="section-title">関係性</div>
     <div class="grid">
       <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
       <div class="card" onclick="selectRel('友愛',this)">友愛</div>
@@ -413,7 +312,7 @@ body{
   </div>
 
   <div class="section">
-    <div class="section-title">どのコンテンツで楽しみたいですか？</div>
+    <div class="section-title">形式</div>
     <div class="grid">
       <div class="card" onclick="selectFormat('映画',this)">映画</div>
       <div class="card" onclick="selectFormat('ドラマ',this)">ドラマ</div>
@@ -426,7 +325,7 @@ body{
   <div class="section">
     <div class="results-head">
       <div class="section-title">出会った作品</div>
-      <div class="tags tags-inline" id="activeTags"></div>
+      <div class="tags" id="activeTags"></div>
     </div>
     <div class="results" id="results"></div>
   </div>
@@ -438,20 +337,11 @@ const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjB
 let movies = [];
 let searchTimeoutId = null;
 
-// localStorageから状態を復元
 const savedState = localStorage.getItem('yuri_tamariba_state');
-let state = savedState ? JSON.parse(savedState) : {
-  country: "",
-  mood: [],
-  rel: [],
-  format: []
-};
+let state = savedState ? JSON.parse(savedState) : { country: "", mood: [], rel: [], format: [] };
 
-function saveState() {
-  localStorage.setItem('yuri_tamariba_state', JSON.stringify(state));
-}
+function saveState() { localStorage.setItem('yuri_tamariba_state', JSON.stringify(state)); }
 
-// データ取得
 fetch(url)
 .then(r => r.ok ? r.json() : Promise.reject())
 .then(d => {
@@ -460,17 +350,14 @@ fetch(url)
   restoreActiveClasses(); 
 })
 .catch(() => {
-  document.getElementById("results").innerHTML = `<div class="empty-state">読み込みに失敗しました。</div>`;
+  document.getElementById("results").innerHTML = `<div class="empty-state">作品が流れ着くのを待っています...</div>`;
 });
 
-/* ===== UTILS ===== */
 function escapeHtml(str){
   return String(str ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
 }
 
-function openDetail(title){
-  window.location.href = `detail.html?title=${encodeURIComponent(title)}`;
-}
+function openDetail(title){ window.location.href = `detail.html?title=${encodeURIComponent(title)}`; }
 
 function getFilteredMovies(){
   return movies.filter(m=>{
@@ -491,68 +378,44 @@ function restoreActiveClasses() {
   });
 }
 
-/* ===== MENU CONTROL ===== */
-function toggleMenu(){
-  document.getElementById("menu").classList.toggle("open");
-  document.getElementById("overlay").classList.toggle("show");
-}
-function closeMenu(){
-  document.getElementById("menu").classList.remove("open");
-  document.getElementById("overlay").classList.remove("show");
-}
+function toggleMenu(){ document.getElementById("menu").classList.toggle("open"); document.getElementById("overlay").classList.toggle("show"); }
+function closeMenu(){ document.getElementById("menu").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
 
-/* ===== SEARCH (Modified with Image) ===== */
 function searchMovie(keyword){
   const area = document.getElementById("searchResults");
   clearTimeout(searchTimeoutId);
+  if(keyword.trim() === ""){ area.innerHTML = ""; return; }
   
-  if(keyword.trim() === ""){
-    area.innerHTML = "";
-    return;
-  }
-
   const filtered = movies.filter(m => (m.Title || "").toLowerCase().includes(keyword.toLowerCase()));
   
   if(filtered.length === 0){
     searchTimeoutId = setTimeout(() => {
       area.innerHTML = `
         <div class="no-result-box">
-          この作品は、たまりばにまだ流れ着いていないようです。<br>
-          よければ、そっと教えてください。
-          <br>
-          <a href="https://forms.gle/XXXXXXX" target="_blank" class="form-link">作品を教える</a>
-        </div>
-      `;
+          この作品は、まだたまりばに流れ着いていないようです。<br>
+          <a href="https://forms.gle/XXXXXXX" target="_blank" class="form-link">よければ、そっと教えてください。</a>
+        </div>`;
     }, 300);
     return;
   }
 
-  area.innerHTML = filtered.map(m => {
-    const imgUrl = m.Image || "";
-    return `
-      <div class="search-result" onclick="openDetail('${escapeHtml(m.Title)}')">
-        <div class="search-img">
-          <img src="${imgUrl}" alt="" onerror="this.style.display='none'" loading="lazy">
-        </div>
-        <div class="search-info">
-          <div class="search-country">${escapeHtml(m.Country)}</div>
-          <div class="search-title">${escapeHtml(m.Title)}</div>
-        </div>
+  area.innerHTML = filtered.map(m => `
+    <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f0f8fa; cursor:pointer;" onclick="openDetail('${escapeHtml(m.Title)}')">
+      <div style="width:40px; height:54px; border-radius:4px; overflow:hidden; background:#f0f8fa;"><img src="${m.Image || ''}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'"></div>
+      <div>
+        <div style="font-size:10px; color:#8b8175;">${escapeHtml(m.Country)}</div>
+        <div style="font-size:14px;">${escapeHtml(m.Title)}</div>
       </div>
-    `;
-  }).join("");
+    </div>`).join("");
 }
 
-/* ===== RANDOM RECOMMEND ===== */
 function recommendToday(){
-  if(movies.length === 0) return;
   const filtered = getFilteredMovies();
   const pool = filtered.length > 0 ? filtered : movies;
   const picked = pool[Math.floor(Math.random() * pool.length)];
   if(picked) openDetail(picked.Title);
 }
 
-/* ===== FILTERS ===== */
 function selectCountry(val, el){
   state.country = (state.country === val) ? "" : val;
   document.querySelectorAll("#countryGrid .card").forEach(c => c.classList.remove("active"));
@@ -560,50 +423,32 @@ function selectCountry(val, el){
   render();
 }
 
-function selectMood(v, el){ toggle('mood', v, el); }
-function selectRel(v, el){ toggle('rel', v, el); }
-function selectFormat(v, el){ toggle('format', v, el); }
-
 function toggle(type, val, el){
   if(state[type].includes(val)) state[type] = state[type].filter(x => x !== val);
   else state[type].push(val);
   el.classList.toggle("active");
   render();
 }
+function selectMood(v, el){ toggle('mood', v, el); }
+function selectRel(v, el){ toggle('rel', v, el); }
+function selectFormat(v, el){ toggle('format', v, el); }
 
-/* ===== RENDER (Modified with #tag) ===== */
 function render(){
   saveState();
-  
-  // アクティブタグ表示 (タグに#を追加)
   const tags = [state.country, ...state.mood, ...state.rel, ...state.format].filter(Boolean);
-  const tagArea = document.getElementById("activeTags");
-  tagArea.innerHTML = tags.length ? tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join("") : `<span class="tag soft">すべて表示</span>`;
+  document.getElementById("activeTags").innerHTML = tags.length ? tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join("") : `<span class="tag" style="opacity:0.5">#すべて</span>`;
 
-  // リスト表示
   const list = getFilteredMovies();
   const area = document.getElementById("results");
-  area.innerHTML = "";
-
-  if(list.length === 0){
-    area.innerHTML = `<div class="empty-state">まだ、ぴたりと重なる作品が見つかっていないようです。<br>気分をひとつほどいて、もう一度のぞいてみてください。</div>`;
-    return;
-  }
-
-  area.innerHTML = list.map(m => {
-    const imgUrl = m.Image || ""; 
-    return `
-      <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
-        <div class="movie-img">
-          <img src="${imgUrl}" alt="" onerror="this.parentElement.style.display='none'" loading="lazy">
-        </div>
-        <div class="movie-content">
-          <div class="meta">${escapeHtml(m.Country)}・${escapeHtml(m.Year)}・${escapeHtml(m.Format)}</div>
-          <h3>${escapeHtml(m.Title)}</h3>
-        </div>
+  area.innerHTML = list.length === 0 ? `<div class="empty-state">まだ、ぴたりと重なる作品が見つかっていないようです。</div>` : 
+  list.map(m => `
+    <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
+      <div class="movie-img"><img src="${m.Image || ''}" onerror="this.parentElement.style.display='none'" loading="lazy"></div>
+      <div class="movie-content">
+        <div class="meta">${escapeHtml(m.Country)}・${escapeHtml(m.Year)}・${escapeHtml(m.Format)}</div>
+        <h3>${escapeHtml(m.Title)}</h3>
       </div>
-    `;
-  }).join("");
+    </div>`).join("");
 }
 </script>
 
