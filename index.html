@@ -161,7 +161,7 @@ body::before {
 
   <!-- Mood -->
   <div class="section">
-    <div class="section-title">どんな心持ちでいたい？</div>
+    <div class="section-title">どんな気持ちで見たい？</div>
     <div class="grid" id="moodGrid">
       <div class="card" onclick="selectMood('ピュアな',this)">ピュアな</div>
       <div class="card" onclick="selectMood('アダルトな',this)">アダルトな</div>
@@ -174,7 +174,7 @@ body::before {
 
   <!-- Relationship -->
   <div class="section">
-    <div class="section-title">ふたりの距離感は？</div>
+    <div class="section-title">扱われる距離感の好みは？</div>
     <div class="grid" id="relGrid">
       <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
       <div class="card" onclick="selectRel('片思い',this)">片思い</div>
@@ -309,7 +309,7 @@ function render(){
   const list = getFilteredMovies();
   const area = document.getElementById("results");
   
-  area.innerHTML = list.length === 0 ? `<div class="empty-state">まだ、ぴたりと重なる作品は見つかっていないようです。</div>` : 
+  area.innerHTML = list.length === 0 ? `<div class="empty-state">まだ、ぴたりと重なる作品は届いていないようです。選択を少し変えてみると、思わぬ掘り出し物があるかもしれません。</div>` : 
   list.map(m => `
     <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
       <div class="movie-img"><img src="${m.Image || ''}" onerror="this.style.display='none'" loading="lazy"></div>
