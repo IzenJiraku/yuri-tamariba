@@ -71,7 +71,8 @@ body::before {
 }
 
 .section{ margin-top:60px; }
-.section-title{ font-size:14px; margin-bottom:24px; color: #5a7a8a; text-align: center; letter-spacing: 0.1em; }
+.section-title{ font-size:14px; margin-bottom:12px; color: #5a7a8a; text-align: center; letter-spacing: 0.1em; }
+.section-sub { font-size: 10px; color: #8b8175; text-align: center; margin-bottom: 20px; display: block; }
 
 /* ===== GRID & CARDS ===== */
 .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
@@ -95,7 +96,7 @@ body::before {
 .card:active { transform: scale(0.96); }
 
 .card.active{
-  background: #ffffff; border-color: #a0d8ef; color: #3a5a6a;
+  background: #c7e9f5; border-color: #a0d8ef; color: #3a5a6a;
   box-shadow: 0 0 0 0px rgba(160, 216, 239, 0.5);
   animation: ripple 2.5s infinite;
 }
@@ -190,57 +191,60 @@ body::before {
   <div class="section">
     <div class="section-title">どこの国の空気に触れたい？</div>
     <div class="grid" id="countryGrid">
-      <div class="card" onclick="selectCountry('日本',this)">日本</div>
-      <div class="card" onclick="selectCountry('韓国',this)">韓国</div>
-      <div class="card" onclick="selectCountry('タイ',this)">タイ</div>
-      <div class="card" onclick="selectCountry('台湾',this)">台湾</div>
-      <div class="card" onclick="selectCountry('中国',this)">中国</div>
-      <div class="card" onclick="selectCountry('アメリカ',this)">アメリカ</div>
-      <div class="card" onclick="selectCountry('フランス',this)">フランス</div>
-      <div class="card" onclick="selectCountry('イタリア',this)">イタリア</div>
+      <div class="card" data-value="日本" onclick="selectCountry('日本',this)">日本</div>
+      <div class="card" data-value="韓国" onclick="selectCountry('韓国',this)">韓国</div>
+      <div class="card" data-value="タイ" onclick="selectCountry('タイ',this)">タイ</div>
+      <div class="card" data-value="台湾" onclick="selectCountry('台湾',this)">台湾</div>
+      <div class="card" data-value="中国" onclick="selectCountry('中国',this)">中国</div>
+      <div class="card" data-value="アメリカ" onclick="selectCountry('アメリカ',this)">アメリカ</div>
+      <div class="card" data-value="フランス" onclick="selectCountry('フランス',this)">フランス</div>
+      <div class="card" data-value="イタリア" onclick="selectCountry('イタリア',this)">イタリア</div>
     </div>
   </div>
 
   <!-- 2. Format -->
   <div class="section">
     <div class="section-title">なにで物語を楽しむ？</div>
+    <span class="section-sub">複数選択できます</span>
     <div class="grid" id="formatGrid">
-      <div class="card" onclick="selectFormat('映画',this)">映画</div>
-      <div class="card" onclick="selectFormat('ドラマ',this)">ドラマ</div>
-      <div class="card" onclick="selectFormat('アニメ',this)">アニメ</div>
-      <div class="card" onclick="selectFormat('漫画',this)">漫画</div>
-      <div class="card" onclick="selectFormat('小説',this)">小説</div>
+      <div class="card" data-value="映画" onclick="selectFormat('映画',this)">映画</div>
+      <div class="card" data-value="ドラマ" onclick="selectFormat('ドラマ',this)">ドラマ</div>
+      <div class="card" data-value="アニメ" onclick="selectFormat('アニメ',this)">アニメ</div>
+      <div class="card" data-value="漫画" onclick="selectFormat('漫画',this)">漫画</div>
+      <div class="card" data-value="小説" onclick="selectFormat('小説',this)">小説</div>
     </div>
   </div>
 
-  <!-- 3. Relationship (アップデート) -->
+  <!-- 3. Relationship -->
   <div class="section">
     <div class="section-title">扱われる距離感の好みは？</div>
+    <span class="section-sub">複数選択できます</span>
     <div class="grid" id="relGrid">
-      <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
-      <div class="card" onclick="selectRel('片思い',this)">片思い</div>
-      <div class="card" onclick="selectRel('友愛',this)">友愛</div>
-      <div class="card" onclick="selectRel('姉妹',this)">姉妹</div>
-      <div class="card" onclick="selectRel('先輩と後輩',this)">先輩と後輩</div>
-      <div class="card" onclick="selectRel('先生と生徒',this)">先生と生徒</div>
-      <div class="card" onclick="selectRel('疑似家族',this)">疑似家族</div>
-      <div class="card" onclick="selectRel('ライバル',this)">ライバル</div>
-      <div class="card" onclick="selectRel('罪の共有',this)">罪の共有</div>
-      <div class="card" onclick="selectRel('復讐',this)">復讐</div>
-      <div class="card" onclick="selectRel('主従',this)">主従</div>
+      <div class="card" data-value="恋愛" onclick="selectRel('恋愛',this)">恋愛</div>
+      <div class="card" data-value="片思い" onclick="selectRel('片思い',this)">片思い</div>
+      <div class="card" data-value="友愛" onclick="selectRel('友愛',this)">友愛</div>
+      <div class="card" data-value="姉妹" onclick="selectRel('姉妹',this)">姉妹</div>
+      <div class="card" data-value="先輩と後輩" onclick="selectRel('先輩と後輩',this)">先輩と後輩</div>
+      <div class="card" data-value="先生と生徒" onclick="selectRel('先生と生徒',this)">先生と生徒</div>
+      <div class="card" data-value="疑似家族" onclick="selectRel('疑似家族',this)">疑似家族</div>
+      <div class="card" data-value="ライバル" onclick="selectRel('ライバル',this)">ライバル</div>
+      <div class="card" data-value="罪の共有" onclick="selectRel('罪の共有',this)">罪の共有</div>
+      <div class="card" data-value="復讐" onclick="selectRel('復讐',this)">復讐</div>
+      <div class="card" data-value="主従" onclick="selectRel('主従',this)">主従</div>
     </div>
   </div>
 
   <!-- 4. Mood -->
   <div class="section">
     <div class="section-title">どんな気持ちで見たい？</div>
+    <span class="section-sub">複数選択できます</span>
     <div class="grid" id="moodGrid">
-      <div class="card" onclick="selectMood('ピュアな',this)">ピュアな</div>
-      <div class="card" onclick="selectMood('アダルトな',this)">アダルトな</div>
-      <div class="card" onclick="selectMood('リアルな',this)">リアルな</div>
-      <div class="card" onclick="selectMood('ディープな',this)">ディープな</div>
-      <div class="card" onclick="selectMood('ウェットな',this)">ウェットな</div>
-      <div class="card" onclick="selectMood('ヘビーな',this)">ヘビーな</div>
+      <div class="card" data-value="ピュアな" onclick="selectMood('ピュアな',this)">ピュアな</div>
+      <div class="card" data-value="アダルトな" onclick="selectMood('アダルトな',this)">アダルトな</div>
+      <div class="card" data-value="リアルな" onclick="selectMood('リアルな',this)">リアルな</div>
+      <div class="card" data-value="ディープな" onclick="selectMood('ディープな',this)">ディープな</div>
+      <div class="card" data-value="ウェットな" onclick="selectMood('ウェットな',this)">ウェットな</div>
+      <div class="card" data-value="ヘビーな" onclick="selectMood('ヘビーな',this)">ヘビーな</div>
     </div>
   </div>
 
@@ -286,8 +290,8 @@ function getFilteredMovies(){
 
 function restoreActiveClasses() {
   document.querySelectorAll('.card').forEach(card => {
-    const text = card.innerText.trim();
-    if (state.country === text || state.mood.includes(text) || state.rel.includes(text) || state.format.includes(text)) {
+    const val = card.getAttribute('data-value');
+    if (state.country === val || state.mood.includes(val) || state.rel.includes(val) || state.format.includes(val)) {
       card.classList.add('active');
     }
   });
@@ -351,7 +355,7 @@ function removeTag(val) {
   state.format = state.format.filter(x => x !== val);
   
   document.querySelectorAll('.card').forEach(card => {
-    if (card.innerText.trim() === val) card.classList.remove('active');
+    if (card.getAttribute('data-value') === val) card.classList.remove('active');
   });
   render();
 }
