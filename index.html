@@ -6,97 +6,117 @@
 <title>百合のたまりば</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&display=swap');
+
 *{ box-sizing:border-box; }
 
 body{
   margin:0;
   background: #e0f2f7; 
   color:#2b2b2b;
-  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
   overflow-x: hidden;
-  line-height: 1.6;
-  transition: background-color 1.5s ease;
+  line-height: 1.8;
+  transition: background-color 2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* 背景の装飾 */
-body::before {
-  content: ""; position: fixed; top: -10%; left: -10%; width: 70%; height: 70%;
+.bg-decor {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1; pointer-events: none; overflow: hidden;
+}
+.bg-circle {
+  position: absolute; border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
-  z-index: -1; filter: blur(60px); pointer-events: none;
+  filter: blur(50px);
 }
 
 /* ===== TOPBAR ===== */
 .topbar{
   position:fixed; top:0; left:0; width:100%;
   display:flex; justify-content:space-between; align-items:center;
-  padding:15px 22px; background:rgba(255, 255, 255, 0.6);
-  backdrop-filter:blur(15px); border-bottom:1px solid rgba(255, 255, 255, 0.3); z-index:1000;
+  padding:20px 30px; background:rgba(255, 255, 255, 0.3);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
 }
-.logo{ font-size:14px; letter-spacing:0.25em; font-weight: 500; color: #4a6a7a; }
+.logo{ font-size:16px; letter-spacing:0.4em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 .menu-btn{
-  width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8);
+  width: 44px; height: 44px; background: rgba(255, 255, 255, 0.4);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 18px; cursor: pointer; transition: 0.4s;
-  border: 1px solid rgba(255,255,255,0.8); color: #4a6a7a;
+  font-size: 18px; cursor: pointer; transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid rgba(255,255,255,0.6); color: #4a6a7a;
 }
 
 /* ===== LAYOUT ===== */
-.container{ max-width:760px; margin:auto; padding:120px 20px 120px; }
-.hero { text-align: center; margin-bottom: 40px; }
-.hero h1{ font-size:28px; font-weight:400; margin:0 0 20px 0; letter-spacing: 0.2em; color: #4a6a7a; }
-.hero-main-text { font-size: 15px; color: #3a5a6a; }
+.container{ max-width:800px; margin:auto; padding:160px 24px 120px; }
+.hero { text-align: center; margin-bottom: 80px; animation: fadeIn 2s ease; }
+.hero h1{ font-size:32px; font-weight:300; margin:0 0 25px 0; letter-spacing: 0.3em; color: #4a6a7a; }
+.hero-main-text { font-size: 14px; color: #5a7a8a; letter-spacing: 0.1em; opacity: 0.8; }
 
-.section{ margin-top:60px; }
-.section-title{ font-size:14px; margin-bottom:12px; color: #5a7a8a; text-align: center; letter-spacing: 0.1em; }
-.section-sub { font-size: 10px; color: #8b8175; text-align: center; margin-bottom: 20px; display: block; }
+.section{ margin-top:80px; animation: fadeInUp 1.5s ease backwards; }
+.section-title{ font-size:13px; margin-bottom:20px; color: #5a7a8a; text-align: center; letter-spacing: 0.25em; font-weight: 500; }
+.section-sub { font-size: 10px; color: #8b8175; text-align: center; margin-bottom: 30px; display: block; letter-spacing: 0.1em; }
 
 /* ===== GRID & CARDS ===== */
-.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-@media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); } }
+.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+@media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); gap:12px; } }
 @media (max-width:400px){ .grid{ grid-template-columns:repeat(2,1fr); } }
 
 .card{
-  aspect-ratio:1/1; background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%; 
+  aspect-ratio:1/1; background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition:all 0.3s;
-  text-align:center; padding:10px; font-size: 13px; color: #5a7a8a;
+  cursor:pointer; transition:all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  text-align:center; padding:15px; font-size: 13px; color: #5a7a8a;
+  backdrop-filter: blur(5px);
+  border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%;
 }
-.card.active{ background: #c7e9f5; border-color: #a0d8ef; color: #3a5a6a; transform: scale(1.05); }
+.card:nth-child(3n) { border-radius: 45% 55% 48% 52% / 52% 48% 55% 45%; }
+.card:nth-child(3n+1) { border-radius: 52% 48% 50% 50% / 48% 52% 52% 48%; }
 
-/* ===== SLIDER (潜水深度) ===== */
+.card.active{ background: rgba(199, 233, 245, 0.7); border-color: #a0d8ef; color: #3a5a6a; box-shadow: 0 10px 30px rgba(160, 216, 239, 0.2); transform: scale(1.05); }
+
+/* ===== SLIDER ===== */
 .slider-wrapper { max-width: 400px; margin: 0 auto; text-align: center; }
 input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
-input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: rgba(74, 106, 122, 0.15); border-radius: 2px; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #fff; border: 1px solid #a0d8ef; margin-top: -10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-#depthLabel { font-size: 13px; margin-top: 15px; letter-spacing: 0.1em; color: #4a6a7a; font-weight: 500; }
+input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: rgba(74, 106, 122, 0.2); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #fff; border: 1px solid #a0d8ef; margin-top: -9px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+#depthLabel { font-size: 12px; margin-top: 20px; letter-spacing: 0.3em; color: #4a6a7a; font-weight: 500; }
 
 /* ===== RESULTS ===== */
-.results{ display:grid; gap:16px; margin-top: 30px; }
+.results{ display:grid; gap:20px; margin-top: 40px; }
 .movie{
-  background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 20px 40px 30px 50px / 50% 50% 50% 50%;
-  padding:20px; display: flex; gap: 20px; align-items: center;
-  transition: 0.3s; text-decoration: none; color: inherit;
+  background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px; padding:24px; display: flex; gap: 24px; align-items: center;
+  transition: all 0.4s; text-decoration: none; color: inherit;
+  backdrop-filter: blur(10px);
+  animation: fadeInUp 0.8s ease backwards;
 }
-.movie-img{ width: 70px; height: 95px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
+.movie-img{ width: 80px; height: 110px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: #f0f8fa; }
 .movie-img img{ width: 100%; height: 100%; object-fit: cover; }
-.movie-content h3 { margin: 4px 0 0; font-size: 16px; font-weight: 500; }
+.movie-content h3 { margin: 8px 0 0; font-size: 17px; font-weight: 500; color: #3a5a6a; }
 
 /* ===== MENU & SEARCH ===== */
-.menu{ position:fixed; top:0; left:-320px; width:320px; height:100vh; background:rgba(255, 255, 255, 0.98); padding:100px 24px 60px; transition:.4s; z-index:2000; overflow-y: auto; color: #2b2b2b !important; }
+.menu{ position:fixed; top:0; left:-340px; width:340px; height:100vh; background:rgba(255, 255, 255, 0.95); padding:120px 30px 60px; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index:2000; overflow-y: auto; }
 .menu.open{ left:0; }
-.search{ width:100%; padding:14px; border-radius:15px; border:1px solid #d0e8f0; outline: none; font-size: 14px; }
+.search{ width:100%; padding:16px; border-radius:15px; border:1px solid #d0e8f0; outline: none; font-size: 14px; background: rgba(255,255,255,0.5); }
 .no-result-box { padding: 20px 0; font-size: 12px; color: #8b8175; line-height: 1.8; }
 .form-link { color: #4a6a7a; text-decoration: underline; }
 
-.overlay{ position:fixed; inset:0; background:rgba(0, 0, 0, 0.1); opacity:0; pointer-events:none; transition:.3s; z-index:1500; backdrop-filter: blur(2px); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+.overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.1); opacity:0; pointer-events:none; transition:.6s; z-index:1500; backdrop-filter: blur(4px); }
 .overlay.show{ opacity:1; pointer-events:auto; }
 </style>
 </head>
 
 <body>
+
+<div class="bg-decor">
+  <div class="bg-circle" style="width: 60vw; height: 60vw; top: -20vw; right: -10vw;"></div>
+  <div class="bg-circle" style="width: 40vw; height: 40vw; bottom: -10vw; left: -10vw; opacity: 0.6;"></div>
+</div>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
@@ -108,7 +128,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
 <div class="menu" id="menu">
   <input class="search" type="text" placeholder="作品名を探す" oninput="searchMovie(this.value)">
   <div id="searchResults"></div>
-  <a href="list.html" style="display:block; margin-top:30px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center;">作品一覧を見る</a>
+  <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:13px; text-align:center;">作品一覧を眺める</a>
 </div>
 
 <div class="container">
@@ -182,7 +202,6 @@ const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjB
 let movies = [];
 
 const moodDepthMap = { "ピュアな": 1, "リアルな": 2, "アダルトな": 3, "ウェットな": 4, "ヘビーな": 5 };
-
 let state = { country: "", format: [], rel: [], depth: 1 };
 
 fetch(url).then(r => r.json()).then(d => {
@@ -196,9 +215,9 @@ function updateDepth(val, shouldRender = true) {
   const labels = ["ピュア", "リアル", "アダルト", "ウェット", "ヘビー"];
   document.getElementById("depthLabel").innerText = labels[val - 1];
   
-  const r = 224 - (val - 1) * 15;
-  const g = 242 - (val - 1) * 20;
-  const b = 247 - (val - 1) * 12;
+  const r = 224 - (val - 1) * 12;
+  const g = 242 - (val - 1) * 15;
+  const b = 247 - (val - 1) * 10;
   document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 
   if(shouldRender) render();
@@ -219,49 +238,37 @@ function toggleFilter(type, val, el){
 }
 
 function getFilteredMovies(){
-  // 何も選択されていないかチェック (depthは初期値1なので除外)
-  if (!state.country && state.format.length === 0 && state.rel.length === 0) {
-    return null; // 何も表示しないフラグ
-  }
+  if (!state.country && state.format.length === 0 && state.rel.length === 0) return null;
 
   return movies.filter(m => {
     const okC = !state.country || m.Country === state.country;
     const okF = state.format.length === 0 || state.format.some(v => (m.Format || "").includes(v));
     const okR = state.rel.length === 0 || state.rel.some(v => (m.Relationship || "").includes(v));
-    
     const movieMoods = (m.Mood || "").split(/[,、]/).filter(Boolean);
-    const movieDepths = movieMoods.map(mood => moodDepthMap[mood.trim()] || 1);
-    const movieMaxDepth = movieDepths.length > 0 ? Math.max(...movieDepths) : 1;
-    const okD = movieMaxDepth <= state.depth;
-
-    return okC && okF && okR && okD;
+    const movieMaxDepth = movieMoods.length > 0 ? Math.max(...movieMoods.map(mood => moodDepthMap[mood.trim()] || 1)) : 1;
+    return okC && okF && okR && movieMaxDepth <= state.depth;
   });
 }
 
 function render(){
   const list = getFilteredMovies();
-  const resultsSection = document.getElementById("resultsSection");
+  const section = document.getElementById("resultsSection");
   const area = document.getElementById("results");
   
-  // 何も選択されていない場合はセクションごと隠す
-  if (list === null) {
-    resultsSection.style.display = "none";
-    return;
-  }
-
-  resultsSection.style.display = "block";
+  if (list === null) { section.style.display = "none"; return; }
+  section.style.display = "block";
 
   if(list.length === 0) {
-    area.innerHTML = `<div style="text-align:center; padding:60px 20px; font-size:13px; color:#8b8175;">この深さには、まだ作品が届いていないようです。</div>`;
+    area.innerHTML = `<div style="text-align:center; padding:60px 20px; font-size:13px; color:#8b8175;">この条件には、まだ作品が届いていないようです。</div>`;
     return;
   }
 
-  area.innerHTML = list.map(m => `
-    <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}">
-      <div class="movie-img"><img src="${m.Image || ''}" onerror="this.style.display='none'"></div>
+  area.innerHTML = list.map((m, i) => `
+    <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}" style="animation-delay: ${i * 0.1}s">
+      <div class="movie-img"><img src="${m.Image || ''}" onerror="this.style.opacity='0'"></div>
       <div class="movie-content">
-        <div style="font-size:10px; opacity:0.7;">${m.Country} / ${m.Format}</div>
-        <h3 style="color: inherit; margin-top:2px;">${m.Title}</h3>
+        <div style="font-size:10px; opacity:0.5;">${m.Country} / ${m.Format}</div>
+        <h3>${m.Title}</h3>
       </div>
     </a>`).join("");
 }
@@ -283,7 +290,7 @@ function searchMovie(keyword){
       </div>`;
     return;
   }
-  area.innerHTML = filtered.map(m => `<div style="padding:14px; border-bottom:1px solid #f0f8fa; cursor:pointer; font-size:14px;" onclick="location.href='detail.html?title=${encodeURIComponent(m.Title)}'">${m.Title}</div>`).join("");
+  area.innerHTML = filtered.map(m => `<div style="padding:16px; border-bottom:1px solid #f0f8fa; cursor:pointer; font-size:14px;" onclick="location.href='detail.html?title=${encodeURIComponent(m.Title)}'">${m.Title}</div>`).join("");
 }
 </script>
 
