@@ -48,14 +48,38 @@ body::before {
 
 /* ===== LAYOUT ===== */
 .container{ max-width:760px; margin:auto; padding:120px 20px 120px; }
-.hero h1{ font-size:28px; font-weight:400; margin:0; letter-spacing: 0.2em; text-align: center; color: #4a6a7a; }
+
+.hero { text-align: center; margin-bottom: 40px; }
+.hero h1{ font-size:28px; font-weight:400; margin:0 0 20px 0; letter-spacing: 0.2em; color: #4a6a7a; }
+
+.hero-guide {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+.hero-main-text {
+  font-size: 15px;
+  color: #3a5a6a;
+  line-height: 1.8;
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+.hero-sub-text {
+  font-size: 11px;
+  color: #8b8175;
+  letter-spacing: 0.02em;
+}
 
 .section{ margin-top:60px; }
 .section-title{ font-size:14px; margin-bottom:24px; color: #5a7a8a; text-align: center; letter-spacing: 0.1em; }
 
 /* ===== GRID & CARDS ===== */
-.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:15px; }
-@media (max-width:480px){ .grid{ grid-template-columns:repeat(2,1fr); } }
+.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+@media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:400px){ 
+  .grid{ grid-template-columns:repeat(2,1fr); }
+  .hero-main-text { font-size: 14px; }
+}
 
 .card{
   aspect-ratio:1/1; background: rgba(255, 255, 255, 0.6);
@@ -68,6 +92,7 @@ body::before {
 }
 
 .card:hover{ background:rgba(255,255,255,0.9); transform: translateY(-3px); }
+.card:active { transform: scale(0.96); }
 
 .card.active{
   background: #ffffff; border-color: #a0d8ef; color: #3a5a6a;
@@ -82,9 +107,19 @@ body::before {
 
 /* ===== RESULTS ===== */
 .results-head{ display:flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom:30px; }
-.tag{ background:rgba(255,255,255,0.9); border:1px solid rgba(160, 216, 239, 0.3); padding:4px 12px; border-radius:999px; font-size:11px; color: #5a7a8a; margin: 2px; }
+.tag{ 
+  background:rgba(255,255,255,0.9); border:1px solid rgba(160, 216, 239, 0.3); 
+  padding:4px 12px; border-radius:999px; font-size:11px; color: #5a7a8a; margin: 2px;
+  cursor: pointer; transition: 0.3s;
+}
+.tag:hover { background: #f0f8fa; border-color: #a0d8ef; }
 
-.results{ display:grid; gap:16px; }
+.results{ display:grid; gap:16px; animation: fadeIn 0.8s ease-out; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .movie{
   background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.5);
@@ -144,15 +179,14 @@ body::before {
 
 <div class="container">
   <div class="hero">
-    <div class="hero">
-  <h1>百合のたまりば</h1>
-  <div class="hero-description">
-    <p class="main-text">今の気分や好みの関係性を選んで、<br class="sp-only">あなたにぴったりの一作を見つける場所です。</p>
-    <p class="sub-text">下のカードをタップすると、作品が絞り込まれます。</p>
+    <h1>百合のたまりば</h1>
+    <div class="hero-guide">
+      <div class="hero-main-text">今の気分や好みの関係性を選んで、<br>あなたにぴったりの一作を見つける場所です。</div>
+      <div class="hero-sub-text">下のカードをいくつか選ぶと、作品が絞り込まれます。</div>
+    </div>
   </div>
-</div>
 
-  <!-- 国別 -->
+  <!-- 1. 国別 -->
   <div class="section">
     <div class="section-title">どこの国の空気に触れたい？</div>
     <div class="grid" id="countryGrid">
@@ -161,10 +195,43 @@ body::before {
       <div class="card" onclick="selectCountry('タイ',this)">タイ</div>
       <div class="card" onclick="selectCountry('台湾',this)">台湾</div>
       <div class="card" onclick="selectCountry('中国',this)">中国</div>
+      <div class="card" onclick="selectCountry('アメリカ',this)">アメリカ</div>
+      <div class="card" onclick="selectCountry('フランス',this)">フランス</div>
+      <div class="card" onclick="selectCountry('イタリア',this)">イタリア</div>
     </div>
   </div>
 
-  <!-- Mood -->
+  <!-- 2. Format -->
+  <div class="section">
+    <div class="section-title">なにで物語を楽しむ？</div>
+    <div class="grid" id="formatGrid">
+      <div class="card" onclick="selectFormat('映画',this)">映画</div>
+      <div class="card" onclick="selectFormat('ドラマ',this)">ドラマ</div>
+      <div class="card" onclick="selectFormat('アニメ',this)">アニメ</div>
+      <div class="card" onclick="selectFormat('漫画',this)">漫画</div>
+      <div class="card" onclick="selectFormat('小説',this)">小説</div>
+    </div>
+  </div>
+
+  <!-- 3. Relationship (アップデート) -->
+  <div class="section">
+    <div class="section-title">扱われる距離感の好みは？</div>
+    <div class="grid" id="relGrid">
+      <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
+      <div class="card" onclick="selectRel('片思い',this)">片思い</div>
+      <div class="card" onclick="selectRel('友愛',this)">友愛</div>
+      <div class="card" onclick="selectRel('姉妹',this)">姉妹</div>
+      <div class="card" onclick="selectRel('先輩と後輩',this)">先輩と後輩</div>
+      <div class="card" onclick="selectRel('先生と生徒',this)">先生と生徒</div>
+      <div class="card" onclick="selectRel('疑似家族',this)">疑似家族</div>
+      <div class="card" onclick="selectRel('ライバル',this)">ライバル</div>
+      <div class="card" onclick="selectRel('罪の共有',this)">罪の共有</div>
+      <div class="card" onclick="selectRel('復讐',this)">復讐</div>
+      <div class="card" onclick="selectRel('主従',this)">主従</div>
+    </div>
+  </div>
+
+  <!-- 4. Mood -->
   <div class="section">
     <div class="section-title">どんな気持ちで見たい？</div>
     <div class="grid" id="moodGrid">
@@ -174,34 +241,6 @@ body::before {
       <div class="card" onclick="selectMood('ディープな',this)">ディープな</div>
       <div class="card" onclick="selectMood('ウェットな',this)">ウェットな</div>
       <div class="card" onclick="selectMood('ヘビーな',this)">ヘビーな</div>
-    </div>
-  </div>
-
-  <!-- Relationship -->
-  <div class="section">
-    <div class="section-title">扱われる距離感の好みは？</div>
-    <div class="grid" id="relGrid">
-      <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
-      <div class="card" onclick="selectRel('片思い',this)">片思い</div>
-      <div class="card" onclick="selectRel('友愛',this)">友愛</div>
-      <div class="card" onclick="selectRel('姉妹',this)">姉妹</div>
-      <div class="card" onclick="selectRel('疑似家族',this)">疑似家族</div>
-      <div class="card" onclick="selectRel('ライバル',this)">ライバル</div>
-      <div class="card" onclick="selectRel('罪の共有',this)">罪の共有</div>
-      <div class="card" onclick="selectRel('復讐',this)">復讐</div>
-      <div class="card" onclick="selectRel('主従',this)">主従</div>
-    </div>
-  </div>
-
-  <!-- Format -->
-  <div class="section">
-    <div class="section-title">なにで物語を楽しむ？</div>
-    <div class="grid" id="formatGrid">
-      <div class="card" onclick="selectFormat('映画',this)">映画</div>
-      <div class="card" onclick="selectFormat('ドラマ',this)">ドラマ</div>
-      <div class="card" onclick="selectFormat('アニメ',this)">アニメ</div>
-      <div class="card" onclick="selectFormat('漫画',this)">漫画</div>
-      <div class="card" onclick="selectFormat('小説',this)">小説</div>
     </div>
   </div>
 
@@ -257,7 +296,6 @@ function restoreActiveClasses() {
 function toggleMenu(){ document.getElementById("menu").classList.toggle("open"); document.getElementById("overlay").classList.toggle("show"); }
 function closeMenu(){ document.getElementById("menu").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
 
-// 検索機能：ヒットしない時のメッセージを含む
 function searchMovie(keyword){
   const area = document.getElementById("searchResults");
   clearTimeout(searchTimeoutId);
@@ -306,10 +344,24 @@ function selectMood(v, el){ toggle('mood', v, el); }
 function selectRel(v, el){ toggle('rel', v, el); }
 function selectFormat(v, el){ toggle('format', v, el); }
 
+function removeTag(val) {
+  if (state.country === val) state.country = "";
+  state.mood = state.mood.filter(x => x !== val);
+  state.rel = state.rel.filter(x => x !== val);
+  state.format = state.format.filter(x => x !== val);
+  
+  document.querySelectorAll('.card').forEach(card => {
+    if (card.innerText.trim() === val) card.classList.remove('active');
+  });
+  render();
+}
+
 function render(){
   saveState();
   const tags = [state.country, ...state.mood, ...state.rel, ...state.format].filter(Boolean);
-  document.getElementById("activeTags").innerHTML = tags.length ? tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join("") : `<span class="tag" style="opacity:0.5">#すべて</span>`;
+  document.getElementById("activeTags").innerHTML = tags.length 
+    ? tags.map(t => `<span class="tag" onclick="removeTag('${escapeHtml(t)}')">#${escapeHtml(t)} ✕</span>`).join("") 
+    : `<span class="tag" style="opacity:0.5">#すべて</span>`;
 
   const list = getFilteredMovies();
   const area = document.getElementById("results");
