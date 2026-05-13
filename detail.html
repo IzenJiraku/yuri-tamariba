@@ -12,9 +12,24 @@
 
 body{
   margin:0;
-  background:#f7f3eb;
+  background: #e0f2f7; /* メインと同じやわらかい水色 */
   color:#2b2b2b;
   font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  overflow-x: hidden;
+}
+
+/* 背景の装飾（白い水たまり） */
+body::before {
+  content: "";
+  position: fixed;
+  top: -10%;
+  right: -10%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+  z-index: -1;
+  filter: blur(60px);
+  pointer-events: none;
 }
 
 /* ===== TOPBAR ===== */
@@ -24,250 +39,239 @@ body{
   left:0;
   width:100%;
   display:flex;
-  justify-content:space-between;
   align-items:center;
   padding:20px 22px;
-  background:rgba(247,243,235,0.92);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(0,0,0,0.06);
+  background:rgba(255, 255, 255, 0.4);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(255, 255, 255, 0.5);
   z-index:1000;
+}
+
+/* 戻るボタンをしずくの形に */
+.back-btn{
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.4s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.8);
+  text-decoration: none;
+  color: #4a6a7a;
+  margin-right: 15px;
+}
+
+.back-btn:hover {
+  border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%;
+  background: #fff;
 }
 
 .logo{
   font-size:14px;
-  letter-spacing:0.2em;
-}
-
-.back-link{
-  text-decoration:none;
-  color:#2b2b2b;
-  font-size:14px;
+  letter-spacing:0.25em;
+  font-weight: 500;
+  color: #4a6a7a;
 }
 
 /* ===== LAYOUT ===== */
 .container{
-  max-width:760px;
+  max-width:700px;
   margin:auto;
-  padding:120px 20px 120px;
+  padding:120px 20px 100px;
 }
 
-.hero{
-  margin-bottom:34px;
+/* ===== CONTENT AREA (水たまりパネル) ===== */
+.detail-card{
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 40px 80px 50px 90px / 10% 10% 10% 10%; /* ゆるやかな水たまり形 */
+  padding: 40px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  animation: fadeUp 0.8s ease-out;
 }
 
-.meta{
-  font-size:12px;
-  color:#8b8175;
-  margin-bottom:10px;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.hero h1{
-  margin:0;
-  font-size:38px;
-  font-weight:400;
-  line-height:1.5;
+.main-visual {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 40px;
 }
 
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:22px;
+@media (max-width: 600px) {
+  .main-visual { flex-direction: column; align-items: center; text-align: center; }
+  .detail-card { padding: 30px 20px; border-radius: 30px; }
 }
 
-.tag{
-  background:#fff;
-  border:1px solid #ddd3c7;
-  padding:6px 12px;
-  border-radius:999px;
-  font-size:12px;
+.poster-img {
+  width: 200px;
+  height: 280px;
+  background: #f0f8fa;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  flex-shrink: 0;
 }
 
-.section{
-  margin-top:42px;
+.poster-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.info-head { flex-grow: 1; }
+
+.info-head h1 {
+  font-size: 28px;
+  margin: 0 0 15px;
+  color: #2b2b2b;
+  line-height: 1.4;
 }
 
-.section-title{
-  font-size:20px;
-  margin-bottom:16px;
+.meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
-.panel{
-  background:rgba(255,255,255,0.85);
-  border:1px solid #e0d6c9;
-  border-radius:24px;
-  padding:24px;
+.meta-tag {
+  font-size: 12px;
+  padding: 4px 12px;
+  background: rgba(160, 216, 239, 0.2);
+  color: #4a6a7a;
+  border-radius: 999px;
 }
 
-.info-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
+/* ===== DESCRIPTION ===== */
+.description-section {
+  border-top: 1px solid rgba(160, 216, 239, 0.3);
+  padding-top: 30px;
 }
 
-@media (min-width:768px){
-  .info-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
+.section-label {
+  font-size: 13px;
+  color: #8b8175;
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
 }
 
-.info-item{
-  padding:14px 0;
-  border-bottom:1px solid #ece4d9;
+.comment {
+  font-size: 15px;
+  line-height: 2;
+  color: #333;
+  white-space: pre-wrap; /* 改行を反映 */
 }
 
-.info-item:last-child{
-  border-bottom:none;
+/* ===== LINK BUTTON ===== */
+.action-area {
+  margin-top: 40px;
+  text-align: center;
 }
 
-.label{
-  font-size:12px;
-  color:#8b8175;
-  margin-bottom:8px;
+.watch-btn {
+  display: inline-block;
+  padding: 15px 40px;
+  background: #a0d8ef;
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 14px;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(160, 216, 239, 0.4);
 }
 
-.value{
-  line-height:1.9;
-  font-size:15px;
+.watch-btn:hover {
+  background: #8ecbe6;
+  transform: translateY(-2px);
 }
 
-.empty-state{
-  background:rgba(255,255,255,0.78);
-  border:1px solid #e0d6c9;
-  border-radius:24px;
-  padding:24px;
-  line-height:2;
-  color:#746b60;
-  font-size:14px;
-}
+.empty-state { text-align: center; padding: 100px 20px; color: #5a7a8a; }
 </style>
 </head>
 
 <body>
 
 <div class="topbar">
+  <a href="index.html" class="back-btn">←</a>
   <div class="logo">百合のたまりば</div>
-  <a href="index.html" class="back-link">← たまりばにもどる</a>
 </div>
 
-<div class="container" id="app">
-  <div class="empty-state">作品を探しています。</div>
+<div class="container" id="content">
+  <!-- JavaScriptで内容を流し込みます -->
 </div>
 
 <script>
+// URLから作品タイトルを取得
+const params = new URLSearchParams(window.location.search);
+const targetTitle = params.get('title');
+
 const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
 
+fetch(url)
+.then(r => r.json())
+.then(data => {
+  const movie = data.find(m => m.Title === targetTitle);
+  
+  if (!movie) {
+    document.getElementById("content").innerHTML = '<div class="empty-state">作品が見つかりませんでした。</div>';
+    return;
+  }
+
+  renderDetail(movie);
+})
+.catch(() => {
+  document.getElementById("content").innerHTML = '<div class="empty-state">データの読み込みに失敗しました。</div>';
+});
+
 function escapeHtml(str){
-  return String(str ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#39;");
+  return String(str ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
 }
 
-function splitValues(value){
-  if(!value) return [];
-  return String(value)
-    .split(/[、,\/|｜]+/)
-    .map(v => v.trim())
-    .filter(Boolean);
-}
+function renderDetail(m) {
+  const container = document.getElementById("content");
+  
+  // タグの生成（Country, Format, Moodなど）
+  const tags = [m.Country, m.Format, m.Year].filter(Boolean);
+  const moodTags = (m.Mood || "").split(/[,、]/).filter(Boolean);
+  const relTags = (m.Relationship || "").split(/[,、]/).filter(Boolean);
 
-function renderError(message){
-  document.getElementById("app").innerHTML = `
-    <div class="empty-state">${escapeHtml(message)}</div>
-  `;
-}
+  container.innerHTML = `
+    <div class="detail-card">
+      <div class="main-visual">
+        <div class="poster-img">
+          <img src="${m.Image || ''}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmMGY4ZmEiLz48L3N2Zz4='">
+        </div>
+        <div class="info-head">
+          <h1>${escapeHtml(m.Title)}</h1>
+          <div class="meta-tags">
+            ${tags.map(t => `<span class="meta-tag">${escapeHtml(t)}</span>`).join('')}
+            ${moodTags.map(t => `<span class="meta-tag">#${escapeHtml(t.trim())}</span>`).join('')}
+            ${relTags.map(t => `<span class="meta-tag">#${escapeHtml(t.trim())}</span>`).join('')}
+          </div>
+        </div>
+      </div>
 
-function buildInfoItem(label, value){
-  if(!value) return "";
-  return `
-    <div class="info-item">
-      <div class="label">${escapeHtml(label)}</div>
-      <div class="value">${escapeHtml(value)}</div>
+      <div class="description-section">
+        <div class="section-label">たまりばの記憶</div>
+        <div class="comment">${escapeHtml(m.Comment || 'まだ記録がありません。')}</div>
+      </div>
+
+      ${m.Link ? `
+        <div class="action-area">
+          <a href="${m.Link}" target="_blank" class="watch-btn">作品を観に行く</a>
+        </div>
+      ` : ''}
     </div>
   `;
-}
-
-const params = new URLSearchParams(window.location.search);
-const title = params.get("title");
-
-if(!title){
-  renderError("その作品の頁が、まだ見つかっていません。");
-}else{
-  fetch(url)
-    .then(r=>{
-      if(!r.ok) throw new Error("fetch error");
-      return r.json();
-    })
-    .then(data=>{
-      const movie = data.find(m => (m.Title || "") === decodeURIComponent(title));
-
-      if(!movie){
-        renderError("その作品はまだたまりばには流れ着いていないようです。");
-        return;
-      }
-
-      document.title = `${movie.Title || "作品詳細"} | 百合のたまりば`;
-
-      const tags = [
-        ...splitValues(movie.Mood),
-        ...splitValues(movie.Relationship),
-        ...splitValues(movie.Format),
-        ...splitValues(movie.Country)
-      ];
-
-      const knownKeys = ["Title","Country","Year","Format","Mood","Relationship"];
-      const extraItems = Object.entries(movie)
-        .filter(([key, value]) => !knownKeys.includes(key) && String(value || "").trim() !== "")
-        .map(([key, value]) => buildInfoItem(key, value))
-        .join("");
-
-      document.getElementById("app").innerHTML = `
-        <div class="hero">
-          <div class="meta">${escapeHtml(movie.Country || "")}・${escapeHtml(movie.Year || "")}・${escapeHtml(movie.Format || "")}</div>
-          <h1>${escapeHtml(movie.Title || "")}</h1>
-          <div class="tags">
-            ${tags.length
-              ? tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")
-              : `<span class="tag">作品詳細</span>`
-            }
-          </div>
-        </div>
-
-        <div class="section">
-          <div class="section-title">作品の輪郭</div>
-          <div class="panel">
-            <div class="info-grid">
-              ${buildInfoItem("国", movie.Country)}
-              ${buildInfoItem("年", movie.Year)}
-              ${buildInfoItem("形式", movie.Format)}
-              ${buildInfoItem("気分", movie.Mood)}
-              ${buildInfoItem("関係性", movie.Relationship)}
-            </div>
-          </div>
-        </div>
-
-        ${
-          extraItems
-            ? `
-            <div class="section">
-              <div class="section-title">そのほかのこと</div>
-              <div class="panel">
-                <div class="info-grid">
-                  ${extraItems}
-                </div>
-              </div>
-            </div>
-            `
-            : ""
-        }
-      `;
-    })
-    .catch(()=>{
-      renderError("たまりばにまだ作品が流れ着いていないようです。少し時間をおいてのぞいてみてください。");
-    });
+  
+  // ブラウザのタイトルを作品名に変える
+  document.title = `${m.Title} | 百合のたまりば`;
 }
 </script>
 
