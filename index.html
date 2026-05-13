@@ -6,9 +6,7 @@
 <title>百合のたまりば</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{ box-sizing:border-box; }
 
 body{
   margin:0;
@@ -23,124 +21,56 @@ body{
 body::before {
   content: "";
   position: fixed;
-  top: -10%;
-  left: -10%;
-  width: 70%;
-  height: 70%;
+  top: -10%; left: -10%; width: 70%; height: 70%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
-  z-index: -1;
-  filter: blur(60px);
-  pointer-events: none;
+  z-index: -1; filter: blur(60px); pointer-events: none;
 }
 
 /* ===== TOPBAR ===== */
 .topbar{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 22px;
-  background:rgba(255, 255, 255, 0.4);
-  backdrop-filter:blur(15px);
-  border-bottom:1px solid rgba(255, 255, 255, 0.5);
-  z-index:1000;
+  position:fixed; top:0; left:0; width:100%;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:15px 22px; background:rgba(255, 255, 255, 0.4);
+  backdrop-filter:blur(15px); border-bottom:1px solid rgba(255, 255, 255, 0.5); z-index:1000;
 }
 
-.logo{
-  font-size:14px;
-  letter-spacing:0.25em;
-  font-weight: 500;
-  color: #4a6a7a;
-}
+.logo{ font-size:14px; letter-spacing:0.25em; font-weight: 500; color: #4a6a7a; }
 
 .menu-btn{
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.8);
+  width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8);
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  transition: 0.4s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  border: 1px solid rgba(255,255,255,0.8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; transition: 0.4s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.8);
 }
 
-.menu-btn:hover {
-  border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%;
-  background: #fff;
-}
+.menu-btn:hover { border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%; background: #fff; }
 
 /* ===== LAYOUT ===== */
-.container{
-  max-width:760px;
-  margin:auto;
-  padding:120px 20px 120px;
-}
+.container{ max-width:760px; margin:auto; padding:120px 20px 120px; }
+.hero h1{ font-size:28px; font-weight:400; margin:0; letter-spacing: 0.2em; text-align: center; color: #4a6a7a; }
 
-.hero h1{
-  font-size:28px;
-  font-weight:400;
-  margin:0;
-  letter-spacing: 0.2em;
-  text-align: center;
-  color: #4a6a7a;
-}
-
-/* ===== SECTION ===== */
-.section{
-  margin-top:60px;
-}
-
-.section-title{
-  font-size:14px;
-  margin-bottom:24px;
-  color: #5a7a8a;
-  text-align: center;
-  letter-spacing: 0.1em;
-}
+.section{ margin-top:60px; }
+.section-title{ font-size:14px; margin-bottom:24px; color: #5a7a8a; text-align: center; letter-spacing: 0.1em; }
 
 /* ===== GRID & CARDS ===== */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-@media (max-width:480px){
-  .grid{ grid-template-columns:repeat(2,1fr); }
-}
+.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:15px; }
+@media (max-width:480px){ .grid{ grid-template-columns:repeat(2,1fr); } }
 
 .card{
-  aspect-ratio:1/1;
-  background: rgba(255, 255, 255, 0.6);
+  aspect-ratio:1/1; background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%; 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  transition:all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  text-align:center;
-  padding:10px;
-  font-size: 13px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align:center; padding:10px; font-size: 13px; color: #5a7a8a;
   box-shadow: 0 4px 15px rgba(0,0,0,0.02);
 }
 
-.card:hover{
-  background:rgba(255,255,255,0.9);
-  transform: translateY(-3px);
-}
+.card:hover{ background:rgba(255,255,255,0.9); transform: translateY(-3px); }
 
 .card.active{
-  background: #ffffff;
-  border-color: #a0d8ef;
-  color: #3a5a6a;
+  background: #ffffff; border-color: #a0d8ef; color: #3a5a6a;
   box-shadow: 0 0 0 0px rgba(160, 216, 239, 0.5);
   animation: ripple 2.5s infinite;
 }
@@ -151,123 +81,47 @@ body::before {
 }
 
 /* ===== RESULTS ===== */
-.results-head{
-  display:flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom:30px;
-}
-
-.tag{
-  background:rgba(255,255,255,0.9);
-  border:1px solid rgba(160, 216, 239, 0.3);
-  padding:4px 12px;
-  border-radius:999px;
-  font-size:11px;
-  color: #5a7a8a;
-  margin: 2px;
-}
+.results-head{ display:flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom:30px; }
+.tag{ background:rgba(255,255,255,0.9); border:1px solid rgba(160, 216, 239, 0.3); padding:4px 12px; border-radius:999px; font-size:11px; color: #5a7a8a; margin: 2px; }
 
 .results{ display:grid; gap:16px; }
 
 .movie{
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 20px 40px 30px 50px / 50% 50% 50% 50%;
-  padding:20px;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  transition: 0.4s ease;
-  backdrop-filter: blur(5px);
-  text-decoration: none;
-  color: inherit;
+  padding:20px; display: flex; gap: 20px; align-items: center;
+  transition: 0.4s ease; backdrop-filter: blur(5px); text-decoration: none; color: inherit;
 }
 
-.movie:hover{
-  background: #fff;
-  transform: scale(1.01);
-  border-radius: 40px 20px 50px 30px / 50% 50% 50% 50%;
-}
+.movie:hover{ background: #fff; transform: scale(1.01); border-radius: 40px 20px 50px 30px / 50% 50% 50% 50%; }
 
-.movie-img{
-  width: 70px;
-  height: 95px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #f0f8fa;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
+.movie-img{ width: 70px; height: 95px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
 .movie-img img{ width: 100%; height: 100%; object-fit: cover; }
-
-.movie-content h3 {
-  margin: 4px 0 0;
-  font-size: 16px;
-  font-weight: 500;
-  color: #3a5a6a;
-}
-
-.movie-content .meta {
-  font-size: 11px;
-  color: #8b8175;
-}
+.movie-content h3 { margin: 4px 0 0; font-size: 16px; font-weight: 500; color: #3a5a6a; }
+.movie-content .meta { font-size: 11px; color: #8b8175; }
 
 /* ===== MENU & SEARCH ===== */
 .menu{
-  position:fixed;
-  top:0;
-  left:-320px;
-  width:320px;
-  height:100vh;
-  background:rgba(255, 255, 255, 0.98);
-  padding:100px 24px 60px;
-  transition:.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index:2000;
-  overflow-y: auto;
+  position:fixed; top:0; left:-320px; width:320px; height:100vh;
+  background:rgba(255, 255, 255, 0.98); padding:100px 24px 60px;
+  transition:.4s cubic-bezier(0.4, 0, 0.2, 1); z-index:2000; overflow-y: auto;
 }
 .menu.open{ left:0; }
-
 .menu::-webkit-scrollbar { width: 4px; }
 .menu::-webkit-scrollbar-thumb { background: #d0e8f0; border-radius: 10px; }
 
-.search{
-  width:100%;
-  padding:14px;
-  border-radius:15px;
-  border:1px solid #d0e8f0;
-  background:white;
-  font-family: inherit;
-  outline: none;
-  font-size: 14px;
-}
+.search{ width:100%; padding:14px; border-radius:15px; border:1px solid #d0e8f0; outline: none; font-size: 14px; font-family: inherit; }
 
-.no-result-box {
-  padding: 20px 0;
-  font-size: 12px;
-  color: #8b8175;
-  line-height: 1.8;
-}
+.no-result-box { padding: 20px 0; font-size: 12px; color: #8b8175; line-height: 1.8; }
+.form-link { color: #4a6a7a; text-decoration: none; border-bottom: 1px solid #a0d8ef; }
 
-.form-link {
-  color: #4a6a7a;
-  text-decoration: none;
-  border-bottom: 1px solid #a0d8ef;
-}
-
-.today-btn{
-  width:100%; border:none; background:#a0d8ef; color:white; padding:15px; border-radius:25px;
-  font-family: inherit; cursor:pointer; margin-top: 30px; transition: 0.3s;
-  font-size: 14px;
-}
+.today-btn{ width:100%; border:none; background:#a0d8ef; color:white; padding:15px; border-radius:25px; cursor:pointer; margin-top: 30px; font-size: 14px; font-family: inherit; transition: 0.3s; }
 .today-btn:hover { background: #8ecbe6; }
 
 .overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.15); opacity:0; pointer-events:none; transition:.3s; z-index:1500; backdrop-filter: blur(2px); }
 .overlay.show{ opacity:1; pointer-events:auto; }
 
-.empty-state{ padding: 60px 20px; text-align: center; font-size: 13px; color: #8b8175; line-height: 2; }
+.empty-state{ padding: 60px 20px; text-align: center; font-size: 13px; color: #8b8175; }
 </style>
 </head>
 
@@ -295,7 +149,7 @@ body::before {
 
   <!-- 国別 -->
   <div class="section">
-    <div class="section-title">どこの国の空気に触れる？</div>
+    <div class="section-title">どこの国の空気に触める？</div>
     <div class="grid" id="countryGrid">
       <div class="card" onclick="selectCountry('日本',this)">日本</div>
       <div class="card" onclick="selectCountry('韓国',this)">韓国</div>
@@ -305,30 +159,36 @@ body::before {
     </div>
   </div>
 
-  <!-- 気分 -->
+  <!-- Mood -->
   <div class="section">
     <div class="section-title">どんな心持ちでいたい？</div>
     <div class="grid" id="moodGrid">
-      <div class="card" onclick="selectMood('気楽',this)">気楽</div>
-      <div class="card" onclick="selectMood('どん底',this)">どん底</div>
-      <div class="card" onclick="selectMood('雨',this)">雨</div>
-      <div class="card" onclick="selectMood('リアル',this)">リアル</div>
+      <div class="card" onclick="selectMood('ピュアな',this)">ピュアな</div>
+      <div class="card" onclick="selectMood('アダルトな',this)">アダルトな</div>
+      <div class="card" onclick="selectMood('リアルな',this)">リアルな</div>
+      <div class="card" onclick="selectMood('ディープな',this)">ディープな</div>
+      <div class="card" onclick="selectMood('ウェットな',this)">ウェットな</div>
+      <div class="card" onclick="selectMood('ヘビーな',this)">ヘビーな</div>
     </div>
   </div>
 
-  <!-- 関係性 -->
+  <!-- Relationship -->
   <div class="section">
     <div class="section-title">ふたりの距離感は？</div>
     <div class="grid" id="relGrid">
       <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
-      <div class="card" onclick="selectRel('友愛',this)">友愛</div>
-      <div class="card" onclick="selectRel('共犯',this)">共犯</div>
-      <div class="card" onclick="selectRel('復讐',this)">復讐</div>
       <div class="card" onclick="selectRel('片思い',this)">片思い</div>
+      <div class="card" onclick="selectRel('友愛',this)">友愛</div>
+      <div class="card" onclick="selectRel('姉妹',this)">姉妹</div>
+      <div class="card" onclick="selectRel('疑似家族',this)">疑似家族</div>
+      <div class="card" onclick="selectRel('ライバル',this)">ライバル</div>
+      <div class="card" onclick="selectRel('罪の共有',this)">罪の共有</div>
+      <div class="card" onclick="selectRel('復讐',this)">復讐</div>
+      <div class="card" onclick="selectRel('主従',this)">主従</div>
     </div>
   </div>
 
-  <!-- 形式 -->
+  <!-- Format -->
   <div class="section">
     <div class="section-title">なにで物語を楽しむ？</div>
     <div class="grid" id="formatGrid">
@@ -340,7 +200,6 @@ body::before {
     </div>
   </div>
 
-  <!-- おすすめ表示 -->
   <div class="section">
     <div class="results-head">
       <div class="section-title" style="margin-bottom:0">たまりばの作品たち</div>
@@ -352,35 +211,25 @@ body::before {
 
 <script>
 const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
-
 let movies = [];
 let searchTimeoutId = null;
 
-// 状態管理
 const savedState = localStorage.getItem('yuri_tamariba_state');
 let state = savedState ? JSON.parse(savedState) : { country: "", mood: [], rel: [], format: [] };
 
 function saveState() { localStorage.setItem('yuri_tamariba_state', JSON.stringify(state)); }
 
-// 初期データ取得
-fetch(url)
-.then(r => r.ok ? r.json() : Promise.reject())
-.then(d => {
+fetch(url).then(r => r.json()).then(d => {
   movies = d;
   render();
   restoreActiveClasses(); 
-})
-.catch(() => {
+}).catch(() => {
   document.getElementById("results").innerHTML = `<div class="empty-state">作品たちが流れ着くのを待っています...</div>`;
 });
 
-function escapeHtml(str){
-  return String(str ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
-}
-
+function escapeHtml(str){ return String(str ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;"); }
 function openDetail(title){ window.location.href = `detail.html?title=${encodeURIComponent(title)}`; }
 
-// フィルタリング
 function getFilteredMovies(){
   return movies.filter(m=>{
     const okC = !state.country || m.Country === state.country;
@@ -391,7 +240,6 @@ function getFilteredMovies(){
   });
 }
 
-// 画面復元
 function restoreActiveClasses() {
   document.querySelectorAll('.card').forEach(card => {
     const text = card.innerText.trim();
@@ -401,11 +249,10 @@ function restoreActiveClasses() {
   });
 }
 
-// メニュー操作
 function toggleMenu(){ document.getElementById("menu").classList.toggle("open"); document.getElementById("overlay").classList.toggle("show"); }
 function closeMenu(){ document.getElementById("menu").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
 
-// 検索機能
+// 検索機能：ヒットしない時のメッセージを含む
 function searchMovie(keyword){
   const area = document.getElementById("searchResults");
   clearTimeout(searchTimeoutId);
@@ -417,8 +264,8 @@ function searchMovie(keyword){
     searchTimeoutId = setTimeout(() => {
       area.innerHTML = `
         <div class="no-result-box">
-          その作品は、まだここには届いていないようです。<br>
-          <a href="#" class="form-link">よければ、そっと教えてください。</a>
+          その作品は、まだたまりばに届いていないようです。<br>
+          <a href="https://forms.gle/XXXXXXX" target="_blank" class="form-link">よければ、そっと教えてください。</a>
         </div>`;
     }, 300);
     return;
@@ -436,24 +283,11 @@ function searchMovie(keyword){
     </div>`).join("");
 }
 
-// 今日の一本
-function recommendToday(){
-  const filtered = getFilteredMovies();
-  const pool = filtered.length > 0 ? filtered : movies;
-  const picked = pool[Math.floor(Math.random() * pool.length)];
-  if(picked) openDetail(picked.Title);
-}
-
-// 選択ロジック
 function selectCountry(val, el){
-  if(state.country === val) {
-    state.country = "";
-    el.classList.remove("active");
-  } else {
-    state.country = val;
-    document.querySelectorAll("#countryGrid .card").forEach(c => c.classList.remove("active"));
-    el.classList.add("active");
-  }
+  if(state.country === val) state.country = "";
+  else state.country = val;
+  document.querySelectorAll("#countryGrid .card").forEach(c => c.classList.remove("active"));
+  if(state.country) el.classList.add("active");
   render();
 }
 
@@ -467,7 +301,6 @@ function selectMood(v, el){ toggle('mood', v, el); }
 function selectRel(v, el){ toggle('rel', v, el); }
 function selectFormat(v, el){ toggle('format', v, el); }
 
-// 描画
 function render(){
   saveState();
   const tags = [state.country, ...state.mood, ...state.rel, ...state.format].filter(Boolean);
@@ -476,20 +309,22 @@ function render(){
   const list = getFilteredMovies();
   const area = document.getElementById("results");
   
-  if (list.length === 0) {
-    area.innerHTML = `<div class="empty-state">まだ、ぴたりと重なる作品は見つかっていないようです。</div>`;
-  } else {
-    area.innerHTML = list.map(m => `
-      <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
-        <div class="movie-img">
-          <img src="${m.Image || ''}" onerror="this.style.display='none'" loading="lazy">
-        </div>
-        <div class="movie-content">
-          <div class="meta">${escapeHtml(m.Country)} / ${escapeHtml(m.Year)} / ${escapeHtml(m.Format)}</div>
-          <h3>${escapeHtml(m.Title)}</h3>
-        </div>
-      </div>`).join("");
-  }
+  area.innerHTML = list.length === 0 ? `<div class="empty-state">まだ、ぴたりと重なる作品は見つかっていないようです。</div>` : 
+  list.map(m => `
+    <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
+      <div class="movie-img"><img src="${m.Image || ''}" onerror="this.style.display='none'" loading="lazy"></div>
+      <div class="movie-content">
+        <div class="meta">${escapeHtml(m.Country)} / ${escapeHtml(m.Year)} / ${escapeHtml(m.Format)}</div>
+        <h3>${escapeHtml(m.Title)}</h3>
+      </div>
+    </div>`).join("");
+}
+
+function recommendToday(){
+  const filtered = getFilteredMovies();
+  const pool = filtered.length > 0 ? filtered : movies;
+  const picked = pool[Math.floor(Math.random() * pool.length)];
+  if(picked) openDetail(picked.Title);
 }
 </script>
 
