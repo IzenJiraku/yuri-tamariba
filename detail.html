@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>作品詳細 | 百合のたまりば</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#f7f3eb;
+  color:#2b2b2b;
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 22px;
+  background:rgba(247,243,235,0.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+  z-index:1000;
+}
+
+.logo{
+  font-size:14px;
+  letter-spacing:0.2em;
+}
+
+.back-link{
+  text-decoration:none;
+  color:#2b2b2b;
+  font-size:14px;
+}
+
+/* ===== LAYOUT ===== */
+.container{
+  max-width:760px;
+  margin:auto;
+  padding:120px 20px 120px;
+}
+
+.hero{
+  margin-bottom:34px;
+}
+
+.meta{
+  font-size:12px;
+  color:#8b8175;
+  margin-bottom:10px;
+}
+
+.hero h1{
+  margin:0;
+  font-size:38px;
+  font-weight:400;
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:22px;
+}
+
+.tag{
+  background:#fff;
+  border:1px solid #ddd3c7;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+}
+
+.section{
+  margin-top:42px;
+}
+
+.section-title{
+  font-size:20px;
+  margin-bottom:16px;
+}
+
+.panel{
+  background:rgba(255,255,255,0.85);
+  border:1px solid #e0d6c9;
+  border-radius:24px;
+  padding:24px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+
+@media (min-width:768px){
+  .info-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+.info-item{
+  padding:14px 0;
+  border-bottom:1px solid #ece4d9;
+}
+
+.info-item:last-child{
+  border-bottom:none;
+}
+
+.label{
+  font-size:12px;
+  color:#8b8175;
+  margin-bottom:8px;
+}
+
+.value{
+  line-height:1.9;
+  font-size:15px;
+}
+
+.empty-state{
+  background:rgba(255,255,255,0.78);
+  border:1px solid #e0d6c9;
+  border-radius:24px;
+  padding:24px;
+  line-height:2;
+  color:#746b60;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="logo">百合のたまりば</div>
+  <a href="index.html" class="back-link">← たまりばにもどる</a>
+</div>
+
+<div class="container" id="app">
+  <div class="empty-state">作品を探しています。</div>
+</div>
+
+<script>
+const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
+
+function escapeHtml(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+
+function splitValues(value){
+  if(!value) return [];
+  return String(value)
+    .split(/[、,\/|｜]+/)
+    .map(v => v.trim())
+    .filter(Boolean);
+}
+
+function renderError(message){
+  document.getElementById("app").innerHTML = `
+    <div class="empty-state">${escapeHtml(message)}</div>
+  `;
+}
+
+function buildInfoItem(label, value){
+  if(!value) return "";
+  return `
+    <div class="info-item">
+      <div class="label">${escapeHtml(label)}</div>
+      <div class="value">${escapeHtml(value)}</div>
+    </div>
+  `;
+}
+
+const params = new URLSearchParams(window.location.search);
+const title = params.get("title");
+
+if(!title){
+  renderError("その作品の頁が、まだ見つかっていません。");
+}else{
+  fetch(url)
+    .then(r=>{
+      if(!r.ok) throw new Error("fetch error");
+      return r.json();
+    })
+    .then(data=>{
+      const movie = data.find(m => (m.Title || "") === decodeURIComponent(title));
+
+      if(!movie){
+        renderError("その作品はまだたまりばには流れ着いていないようです。");
+        return;
+      }
+
+      document.title = `${movie.Title || "作品詳細"} | 百合のたまりば`;
+
+      const tags = [
+        ...splitValues(movie.Mood),
+        ...splitValues(movie.Relationship),
+        ...splitValues(movie.Format),
+        ...splitValues(movie.Country)
+      ];
+
+      const knownKeys = ["Title","Country","Year","Format","Mood","Relationship"];
+      const extraItems = Object.entries(movie)
+        .filter(([key, value]) => !knownKeys.includes(key) && String(value || "").trim() !== "")
+        .map(([key, value]) => buildInfoItem(key, value))
+        .join("");
+
+      document.getElementById("app").innerHTML = `
+        <div class="hero">
+          <div class="meta">${escapeHtml(movie.Country || "")}・${escapeHtml(movie.Year || "")}・${escapeHtml(movie.Format || "")}</div>
+          <h1>${escapeHtml(movie.Title || "")}</h1>
+          <div class="tags">
+            ${tags.length
+              ? tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")
+              : `<span class="tag">作品詳細</span>`
+            }
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">作品の輪郭</div>
+          <div class="panel">
+            <div class="info-grid">
+              ${buildInfoItem("国", movie.Country)}
+              ${buildInfoItem("年", movie.Year)}
+              ${buildInfoItem("形式", movie.Format)}
+              ${buildInfoItem("気分", movie.Mood)}
+              ${buildInfoItem("関係性", movie.Relationship)}
+            </div>
+          </div>
+        </div>
+
+        ${
+          extraItems
+            ? `
+            <div class="section">
+              <div class="section-title">そのほかのこと</div>
+              <div class="panel">
+                <div class="info-grid">
+                  ${extraItems}
+                </div>
+              </div>
+            </div>
+            `
+            : ""
+        }
+      `;
+    })
+    .catch(()=>{
+      renderError("たまりばにまだ作品が流れ着いていないようです。少し時間をおいてのぞいてみてください。");
+    });
+}
+</script>
+
+</body>
+</html>
