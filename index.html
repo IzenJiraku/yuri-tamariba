@@ -12,14 +12,14 @@
 
 body{
   margin:0;
-  /* 全体の背景をやわらかい水色に */
   background: #e0f2f7; 
   color:#2b2b2b;
   font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
   overflow-x: hidden;
+  line-height: 1.6;
 }
 
-/* 背景の装飾（白い水たまり） */
+/* 背景の装飾 */
 body::before {
   content: "";
   position: fixed;
@@ -42,7 +42,7 @@ body::before {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:20px 22px;
+  padding:15px 22px;
   background:rgba(255, 255, 255, 0.4);
   backdrop-filter:blur(15px);
   border-bottom:1px solid rgba(255, 255, 255, 0.5);
@@ -56,16 +56,15 @@ body::before {
   color: #4a6a7a;
 }
 
-/* メニューボタンをしずくの形に */
 .menu-btn{
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   transition: 0.4s;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -81,36 +80,36 @@ body::before {
 .container{
   max-width:760px;
   margin:auto;
-  padding:140px 20px 120px;
+  padding:120px 20px 120px;
 }
 
 .hero h1{
-  font-size:32px;
+  font-size:28px;
   font-weight:400;
   margin:0;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   text-align: center;
   color: #4a6a7a;
 }
 
 /* ===== SECTION ===== */
 .section{
-  margin-top:80px;
+  margin-top:60px;
 }
 
 .section-title{
-  font-size:16px;
-  margin-bottom:28px;
+  font-size:14px;
+  margin-bottom:24px;
   color: #5a7a8a;
   text-align: center;
   letter-spacing: 0.1em;
 }
 
-/* ===== GRID & CARDS (白基調のしずく) ===== */
+/* ===== GRID & CARDS ===== */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px;
+  gap:15px;
 }
 
 @media (max-width:480px){
@@ -119,7 +118,7 @@ body::before {
 
 .card{
   aspect-ratio:1/1;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%; 
   display:flex;
@@ -128,81 +127,93 @@ body::before {
   cursor:pointer;
   transition:all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   text-align:center;
-  padding:12px;
-  font-size: 14px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  padding:10px;
+  font-size: 13px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
 }
 
 .card:hover{
-  background:rgba(255,255,255,1);
-  transform: translateY(-4px);
-  border-radius: 48% 52% 50% 50% / 50% 50% 48% 52%;
+  background:rgba(255,255,255,0.9);
+  transform: translateY(-3px);
 }
 
 .card.active{
   background: #ffffff;
   border-color: #a0d8ef;
   color: #3a5a6a;
-  border-radius: 50% 50% 48% 52% / 52% 48% 52% 48% !important;
   box-shadow: 0 0 0 0px rgba(160, 216, 239, 0.5);
   animation: ripple 2.5s infinite;
 }
 
 @keyframes ripple {
   0% { box-shadow: 0 0 0 0px rgba(160, 216, 239, 0.4); }
-  100% { box-shadow: 0 0 0 15px rgba(160, 216, 239, 0); }
+  100% { box-shadow: 0 0 0 12px rgba(160, 216, 239, 0); }
 }
 
 /* ===== RESULTS ===== */
 .results-head{
   display:flex;
-  justify-content:space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom:24px;
+  gap: 10px;
+  margin-bottom:30px;
 }
 
 .tag{
   background:rgba(255,255,255,0.9);
   border:1px solid rgba(160, 216, 239, 0.3);
-  padding:6px 14px;
+  padding:4px 12px;
   border-radius:999px;
-  font-size:12px;
+  font-size:11px;
   color: #5a7a8a;
+  margin: 2px;
 }
 
-.results{ display:grid; gap:20px; }
+.results{ display:grid; gap:16px; }
 
 .movie{
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 30px 60px 40px 70px / 50% 50% 50% 50%;
-  padding:24px;
+  border-radius: 20px 40px 30px 50px / 50% 50% 50% 50%;
+  padding:20px;
   display: flex;
   gap: 20px;
   align-items: center;
-  transition: all 0.5s ease;
+  transition: 0.4s ease;
   backdrop-filter: blur(5px);
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.02);
 }
 
 .movie:hover{
   background: #fff;
-  transform: scale(1.02);
-  border-radius: 60px 30px 70px 40px / 50% 50% 50% 50%;
+  transform: scale(1.01);
+  border-radius: 40px 20px 50px 30px / 50% 50% 50% 50%;
 }
 
 .movie-img{
-  width: 74px;
-  height: 100px;
+  width: 70px;
+  height: 95px;
   flex-shrink: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: #f0f8fa;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .movie-img img{ width: 100%; height: 100%; object-fit: cover; }
+
+.movie-content h3 {
+  margin: 4px 0 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #3a5a6a;
+}
+
+.movie-content .meta {
+  font-size: 11px;
+  color: #8b8175;
+}
 
 /* ===== MENU & SEARCH ===== */
 .menu{
@@ -211,49 +222,52 @@ body::before {
   left:-320px;
   width:320px;
   height:100vh;
-  background:rgba(255, 255, 255, 0.95);
-  padding:120px 28px 60px;
+  background:rgba(255, 255, 255, 0.98);
+  padding:100px 24px 60px;
   transition:.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index:2000;
   overflow-y: auto;
 }
 .menu.open{ left:0; }
 
+.menu::-webkit-scrollbar { width: 4px; }
+.menu::-webkit-scrollbar-thumb { background: #d0e8f0; border-radius: 10px; }
+
 .search{
   width:100%;
-  padding:16px;
-  border-radius:20px;
+  padding:14px;
+  border-radius:15px;
   border:1px solid #d0e8f0;
   background:white;
   font-family: inherit;
   outline: none;
+  font-size: 14px;
 }
 
 .no-result-box {
-  padding: 24px 0;
-  font-size: 13px;
+  padding: 20px 0;
+  font-size: 12px;
   color: #8b8175;
   line-height: 1.8;
 }
 
 .form-link {
-  display: inline-block;
-  margin-top: 12px;
   color: #4a6a7a;
   text-decoration: none;
   border-bottom: 1px solid #a0d8ef;
 }
 
 .today-btn{
-  width:100%; border:none; background:#a0d8ef; color:white; padding:16px; border-radius:25px;
+  width:100%; border:none; background:#a0d8ef; color:white; padding:15px; border-radius:25px;
   font-family: inherit; cursor:pointer; margin-top: 30px; transition: 0.3s;
+  font-size: 14px;
 }
 .today-btn:hover { background: #8ecbe6; }
 
-.overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.1); opacity:0; pointer-events:none; transition:.3s; z-index:1500; }
+.overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.15); opacity:0; pointer-events:none; transition:.3s; z-index:1500; backdrop-filter: blur(2px); }
 .overlay.show{ opacity:1; pointer-events:auto; }
 
-.empty-state{ padding: 40px; text-align: center; font-size: 14px; color: #5a7a8a; line-height: 2; }
+.empty-state{ padding: 60px 20px; text-align: center; font-size: 13px; color: #8b8175; line-height: 2; }
 </style>
 </head>
 
@@ -269,9 +283,9 @@ body::before {
 <div class="menu" id="menu">
   <input class="search" type="text" placeholder="作品名を探す" oninput="searchMovie(this.value)">
   <div class="search-results" id="searchResults"></div>
-  <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:15px;">作品一覧</a>
-  <button class="today-btn" onclick="recommendToday()">今日の一本</button>
-  <p style="font-size:11px; color:#8b8175; margin-top: 8px; text-align: center;">たまりばから、そっと一作えらびます。</p>
+  <a href="list.html" style="display:block; margin-top:30px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center;">作品一覧を見る</a>
+  <button class="today-btn" onclick="recommendToday()">今日の一本をひく</button>
+  <p style="font-size:10px; color:#8b8175; margin-top: 10px; text-align: center;">今の気分から、そっと一作えらびます。</p>
 </div>
 
 <div class="container">
@@ -279,8 +293,9 @@ body::before {
     <h1>百合のたまりば</h1>
   </div>
 
+  <!-- 国別 -->
   <div class="section">
-    <div class="section-title">どの国の空気にする？</div>
+    <div class="section-title">どこの国の空気に触れる？</div>
     <div class="grid" id="countryGrid">
       <div class="card" onclick="selectCountry('日本',this)">日本</div>
       <div class="card" onclick="selectCountry('韓国',this)">韓国</div>
@@ -290,9 +305,10 @@ body::before {
     </div>
   </div>
 
+  <!-- 気分 -->
   <div class="section">
-    <div class="section-title">どんな気分になりたい？</div>
-    <div class="grid">
+    <div class="section-title">どんな心持ちでいたい？</div>
+    <div class="grid" id="moodGrid">
       <div class="card" onclick="selectMood('気楽',this)">気楽</div>
       <div class="card" onclick="selectMood('どん底',this)">どん底</div>
       <div class="card" onclick="selectMood('雨',this)">雨</div>
@@ -300,9 +316,10 @@ body::before {
     </div>
   </div>
 
+  <!-- 関係性 -->
   <div class="section">
-    <div class="section-title">どんな関係性が好み？</div>
-    <div class="grid">
+    <div class="section-title">ふたりの距離感は？</div>
+    <div class="grid" id="relGrid">
       <div class="card" onclick="selectRel('恋愛',this)">恋愛</div>
       <div class="card" onclick="selectRel('友愛',this)">友愛</div>
       <div class="card" onclick="selectRel('共犯',this)">共犯</div>
@@ -311,9 +328,10 @@ body::before {
     </div>
   </div>
 
+  <!-- 形式 -->
   <div class="section">
-    <div class="section-title">どんなコンテンツで楽しみたい？</div>
-    <div class="grid">
+    <div class="section-title">なにで物語を楽しむ？</div>
+    <div class="grid" id="formatGrid">
       <div class="card" onclick="selectFormat('映画',this)">映画</div>
       <div class="card" onclick="selectFormat('ドラマ',this)">ドラマ</div>
       <div class="card" onclick="selectFormat('アニメ',this)">アニメ</div>
@@ -322,9 +340,10 @@ body::before {
     </div>
   </div>
 
+  <!-- おすすめ表示 -->
   <div class="section">
     <div class="results-head">
-      <div class="section-title">たまりばのおすすめ</div>
+      <div class="section-title" style="margin-bottom:0">たまりばの作品たち</div>
       <div class="tags" id="activeTags"></div>
     </div>
     <div class="results" id="results"></div>
@@ -337,11 +356,13 @@ const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjB
 let movies = [];
 let searchTimeoutId = null;
 
+// 状態管理
 const savedState = localStorage.getItem('yuri_tamariba_state');
 let state = savedState ? JSON.parse(savedState) : { country: "", mood: [], rel: [], format: [] };
 
 function saveState() { localStorage.setItem('yuri_tamariba_state', JSON.stringify(state)); }
 
+// 初期データ取得
 fetch(url)
 .then(r => r.ok ? r.json() : Promise.reject())
 .then(d => {
@@ -350,7 +371,7 @@ fetch(url)
   restoreActiveClasses(); 
 })
 .catch(() => {
-  document.getElementById("results").innerHTML = `<div class="empty-state">作品が流れ着くのを待っています...</div>`;
+  document.getElementById("results").innerHTML = `<div class="empty-state">作品たちが流れ着くのを待っています...</div>`;
 });
 
 function escapeHtml(str){
@@ -359,6 +380,7 @@ function escapeHtml(str){
 
 function openDetail(title){ window.location.href = `detail.html?title=${encodeURIComponent(title)}`; }
 
+// フィルタリング
 function getFilteredMovies(){
   return movies.filter(m=>{
     const okC = !state.country || m.Country === state.country;
@@ -369,6 +391,7 @@ function getFilteredMovies(){
   });
 }
 
+// 画面復元
 function restoreActiveClasses() {
   document.querySelectorAll('.card').forEach(card => {
     const text = card.innerText.trim();
@@ -378,9 +401,11 @@ function restoreActiveClasses() {
   });
 }
 
+// メニュー操作
 function toggleMenu(){ document.getElementById("menu").classList.toggle("open"); document.getElementById("overlay").classList.toggle("show"); }
 function closeMenu(){ document.getElementById("menu").classList.remove("open"); document.getElementById("overlay").classList.remove("show"); }
 
+// 検索機能
 function searchMovie(keyword){
   const area = document.getElementById("searchResults");
   clearTimeout(searchTimeoutId);
@@ -392,8 +417,8 @@ function searchMovie(keyword){
     searchTimeoutId = setTimeout(() => {
       area.innerHTML = `
         <div class="no-result-box">
-          この作品は、まだたまりばに流れ着いていないようです。<br>
-          <a href="https://forms.gle/XXXXXXX" target="_blank" class="form-link">よければ、そっと教えてください。</a>
+          その作品は、まだここには届いていないようです。<br>
+          <a href="#" class="form-link">よければ、そっと教えてください。</a>
         </div>`;
     }, 300);
     return;
@@ -401,14 +426,17 @@ function searchMovie(keyword){
 
   area.innerHTML = filtered.map(m => `
     <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f0f8fa; cursor:pointer;" onclick="openDetail('${escapeHtml(m.Title)}')">
-      <div style="width:40px; height:54px; border-radius:4px; overflow:hidden; background:#f0f8fa;"><img src="${m.Image || ''}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'"></div>
+      <div style="width:40px; height:54px; border-radius:4px; overflow:hidden; background:#f0f8fa;">
+        <img src="${m.Image || ''}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'">
+      </div>
       <div>
         <div style="font-size:10px; color:#8b8175;">${escapeHtml(m.Country)}</div>
-        <div style="font-size:14px;">${escapeHtml(m.Title)}</div>
+        <div style="font-size:14px; color:#3a5a6a;">${escapeHtml(m.Title)}</div>
       </div>
     </div>`).join("");
 }
 
+// 今日の一本
 function recommendToday(){
   const filtered = getFilteredMovies();
   const pool = filtered.length > 0 ? filtered : movies;
@@ -416,10 +444,16 @@ function recommendToday(){
   if(picked) openDetail(picked.Title);
 }
 
+// 選択ロジック
 function selectCountry(val, el){
-  state.country = (state.country === val) ? "" : val;
-  document.querySelectorAll("#countryGrid .card").forEach(c => c.classList.remove("active"));
-  if(state.country) el.classList.add("active");
+  if(state.country === val) {
+    state.country = "";
+    el.classList.remove("active");
+  } else {
+    state.country = val;
+    document.querySelectorAll("#countryGrid .card").forEach(c => c.classList.remove("active"));
+    el.classList.add("active");
+  }
   render();
 }
 
@@ -433,6 +467,7 @@ function selectMood(v, el){ toggle('mood', v, el); }
 function selectRel(v, el){ toggle('rel', v, el); }
 function selectFormat(v, el){ toggle('format', v, el); }
 
+// 描画
 function render(){
   saveState();
   const tags = [state.country, ...state.mood, ...state.rel, ...state.format].filter(Boolean);
@@ -440,15 +475,21 @@ function render(){
 
   const list = getFilteredMovies();
   const area = document.getElementById("results");
-  area.innerHTML = list.length === 0 ? `<div class="empty-state">まだ、ぴたりと重なる作品が見つかっていないようです。</div>` : 
-  list.map(m => `
-    <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
-      <div class="movie-img"><img src="${m.Image || ''}" onerror="this.parentElement.style.display='none'" loading="lazy"></div>
-      <div class="movie-content">
-        <div class="meta">${escapeHtml(m.Country)}・${escapeHtml(m.Year)}・${escapeHtml(m.Format)}</div>
-        <h3>${escapeHtml(m.Title)}</h3>
-      </div>
-    </div>`).join("");
+  
+  if (list.length === 0) {
+    area.innerHTML = `<div class="empty-state">まだ、ぴたりと重なる作品は見つかっていないようです。</div>`;
+  } else {
+    area.innerHTML = list.map(m => `
+      <div class="movie" onclick="openDetail('${escapeHtml(m.Title)}')">
+        <div class="movie-img">
+          <img src="${m.Image || ''}" onerror="this.style.display='none'" loading="lazy">
+        </div>
+        <div class="movie-content">
+          <div class="meta">${escapeHtml(m.Country)} / ${escapeHtml(m.Year)} / ${escapeHtml(m.Format)}</div>
+          <h3>${escapeHtml(m.Title)}</h3>
+        </div>
+      </div>`).join("");
+  }
 }
 </script>
 
