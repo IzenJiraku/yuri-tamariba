@@ -251,7 +251,7 @@ function restoreUI() {
 
 function updateDepth(val, shouldRender = true) {
   state.depth = parseInt(val);
-  const labels = ["ピュア", "リアル", "アダルト", "ウェット", "ヘビー"];
+  const labels = ["ピュアな", "リアルな", "アダルトな", "ウェットな", "ヘビーな"];
   document.getElementById("depthLabel").innerText = labels[val - 1];
   
   const r = 224 - (val - 1) * 12;
