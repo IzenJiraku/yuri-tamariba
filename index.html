@@ -312,7 +312,7 @@ function getFilteredMovies(){
     const okR = state.rel.length === 0 || state.rel.some(v => (m.Relationship || "").includes(v));
     const movieMoods = (m.Mood || "").split(/[,、]/).filter(Boolean);
     const movieMaxDepth = movieMoods.length > 0 ? Math.max(...movieMoods.map(mood => moodDepthMap[mood.trim()] || 1)) : 1;
-    return okC && okF && okR && movieMaxDepth <= state.depth;
+    return okC && okF && okR && movieMaxDepth === state.depth;
   });
 }
 
