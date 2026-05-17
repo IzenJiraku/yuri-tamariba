@@ -1,128 +1,137 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>百合のたまりば</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>百合のたまりば</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&display=swap');
+  <!-- ==========================================
+    【追加】URL等でシェアした時のサムネイル（OGP）設定
+    ※「https://あなたのサイトのURL」の部分は、本番公開後に実際のURLに書き換えてください。
+  =========================================== -->
+  <meta property="og:site_name" content="百合のたまりば" />
+  <meta property="og:title" content="百合のたまりば" />
+  <meta property="og:description" content="今の心の沈み具合に合わせて、静かに物語を引き寄せる場所。" />
+  <meta property="og:image" content="https://あなたのサイトのURL/ogp.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-*{ box-sizing:border-box; }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&display=swap');
 
-body{
-  margin:0;
-  background: #e0f2f7; 
-  color:#2b2b2b;
-  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  font-size: 16px;
-  overflow-x: hidden;
-  line-height: 1.8;
-  transition: background-color 2s cubic-bezier(0.22, 1, 0.36, 1);
-}
+    *{ box-sizing:border-box; }
 
-/* 背景の装飾 */
-.bg-decor {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -1; pointer-events: none; overflow: hidden;
-}
-.bg-circle {
-  position: absolute; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
-  filter: blur(50px);
-}
+    body{
+      margin:0;
+      background: #e0f2f7; 
+      color:#2b2b2b;
+      font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: 16px;
+      overflow-x: hidden;
+      line-height: 1.8;
+      transition: background-color 2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-/* ===== TOPBAR ===== */
-.topbar{
-  position:fixed; top:0; left:0; width:100%;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:15px 25px; background:rgba(255, 255, 255, 0.3);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
-}
-/* aタグ化に伴うスタイルの微調整（カラーと下線無効化） */
-.logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); text-decoration: none; }
-.menu-btn{
-  width: 48px; height: 48px; background: rgba(255, 255, 255, 0.4);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 20px; cursor: pointer; transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  border: 1px solid rgba(255,255,255,0.6); color: #4a6a7a;
-}
+    /* 背景の装飾 */
+    .bg-decor {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1; pointer-events: none; overflow: hidden;
+    }
+    .bg-circle {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+      filter: blur(50px);
+    }
 
-/* ===== LAYOUT ===== */
-.container{ max-width:800px; margin:auto; padding:140px 20px 100px; }
-.hero { text-align: center; margin-bottom: 60px; animation: fadeIn 2s ease; }
-.hero h1{ font-size:30px; font-weight:300; margin:0 0 25px 0; letter-spacing: 0.25em; color: #4a6a7a; }
-.hero-main-text { font-size: 15px; color: #5a7a8a; letter-spacing: 0.05em; opacity: 0.9; }
+    /* ===== TOPBAR ===== */
+    .topbar{
+      position:fixed; top:0; left:0; width:100%;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 25px; background:rgba(255, 255, 255, 0.3);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
+    }
+    .logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); text-decoration: none; }
+    .menu-btn{
+      width: 48px; height: 48px; background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; cursor: pointer; transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      border: 1px solid rgba(255,255,255,0.6); color: #4a6a7a;
+    }
 
-.section{ margin-top:70px; animation: fadeInUp 1.5s ease backwards; }
-.section-title{ font-size:15px; margin-bottom:18px; color: #5a7a8a; text-align: center; letter-spacing: 0.2em; font-weight: 500; }
-.section-sub { font-size: 11px; color: #8b8175; text-align: center; margin-bottom: 25px; display: block; letter-spacing: 0.1em; }
+    /* ===== LAYOUT ===== */
+    .container{ max-width:800px; margin:auto; padding:140px 20px 100px; }
+    .hero { text-align: center; margin-bottom: 60px; animation: fadeIn 2s ease; }
+    .hero h1{ font-size:30px; font-weight:300; margin:0 0 25px 0; letter-spacing: 0.25em; color: #4a6a7a; }
+    .hero-main-text { font-size: 15px; color: #5a7a8a; letter-spacing: 0.05em; opacity: 0.9; }
 
-/* ===== GRID & CARDS ===== */
-.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:15px; }
-@media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); gap:12px; } }
-@media (max-width:400px){ .grid{ grid-template-columns:repeat(2,1fr); } }
+    .section{ margin-top:70px; animation: fadeInUp 1.5s ease backwards; }
+    .section-title{ font-size:15px; margin-bottom:18px; color: #5a7a8a; text-align: center; letter-spacing: 0.2em; font-weight: 500; }
+    .section-sub { font-size: 11px; color: #8b8175; text-align: center; margin-bottom: 25px; display: block; letter-spacing: 0.1em; }
 
-.card{
-  aspect-ratio:1/1; background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition:all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  text-align:center; padding:12px; font-size: 15px; color: #5a7a8a;
-  backdrop-filter: blur(5px);
-  border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%;
-}
-.card.active{ background: rgba(199, 233, 245, 0.7); border-color: #a0d8ef; color: #3a5a6a; transform: scale(1.05); }
+    /* ===== GRID & CARDS ===== */
+    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:15px; }
+    @media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); gap:12px; } }
+    @media (max-width:400px){ .grid{ grid-template-columns:repeat(2,1fr); } }
 
-/* ===== ACTIVE TAGS & CLEAR ===== */
-.active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; justify-content: center; }
-.filter-tag {
-  background: rgba(255, 255, 255, 0.7); border: 1px solid #a0d8ef;
-  padding: 6px 14px; border-radius: 20px; font-size: 13px; color: #4a6a7a;
-  display: flex; align-items: center; gap: 6px; cursor: pointer;
-}
-.filter-tag::after { content: '×'; font-size: 14px; opacity: 0.6; }
-.clear-btn {
-  display: block; margin: 30px auto; padding: 12px 30px; font-size: 13px;
-  background: none; border: 1px solid #4a6a7a; color: #4a6a7a;
-  border-radius: 6px; cursor: pointer; opacity: 0.7; letter-spacing: 0.1em;
-}
+    .card{
+      aspect-ratio:1/1; background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      text-align:center; padding:12px; font-size: 15px; color: #5a7a8a;
+      backdrop-filter: blur(5px);
+      border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%;
+    }
+    .card.active{ background: rgba(199, 233, 245, 0.7); border-color: #a0d8ef; color: #3a5a6a; transform: scale(1.05); }
 
-/* ===== SLIDER ===== */
-.slider-wrapper { max-width: 320px; margin: 0 auto; text-align: center; }
-input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
-input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: rgba(74, 106, 122, 0.2); }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #fff; border: 1px solid #a0d8ef; margin-top: -11px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-#depthLabel { font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; color: #4a6a7a; font-weight: 500; }
+    /* ===== ACTIVE TAGS & CLEAR ===== */
+    .active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; justify-content: center; }
+    .filter-tag {
+      background: rgba(255, 255, 255, 0.7); border: 1px solid #a0d8ef;
+      padding: 6px 14px; border-radius: 20px; font-size: 13px; color: #4a6a7a;
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+    }
+    .filter-tag::after { content: '×'; font-size: 14px; opacity: 0.6; }
+    .clear-btn {
+      display: block; margin: 30px auto; padding: 12px 30px; font-size: 13px;
+      background: none; border: 1px solid #4a6a7a; color: #4a6a7a;
+      border-radius: 6px; cursor: pointer; opacity: 0.7; letter-spacing: 0.1em;
+    }
 
-/* ===== RESULTS ===== */
-.results{ display:grid; gap:18px; margin-top: 25px; }
-.movie{
-  background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px; padding:20px; display: flex; gap: 20px; align-items: center;
-  transition: all 0.4s; text-decoration: none; color: inherit;
-  backdrop-filter: blur(10px);
-  animation: fadeInUp 0.8s ease backwards;
-}
-.movie-img{ width: 75px; height: 105px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
-.movie-img img{ width: 100%; height: 100%; object-fit: cover; }
-.movie-content h3 { margin: 6px 0 0; font-size: 18px; font-weight: 500; color: #3a5a6a; line-height: 1.4; }
-.movie-meta { font-size: 12px; color: #5a7a8a; opacity: 0.7; }
+    /* ===== SLIDER ===== */
+    .slider-wrapper { max-width: 320px; margin: 0 auto; text-align: center; }
+    input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
+    input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: rgba(74, 106, 122, 0.2); }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #fff; border: 1px solid #a0d8ef; margin-top: -11px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    #depthLabel { font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; color: #4a6a7a; font-weight: 500; }
 
-/* ===== MENU & SEARCH ===== */
-.menu{ position:fixed; top:0; left:-340px; width:300px; height:100vh; background:rgba(255, 255, 255, 0.98); padding:100px 25px 60px; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index:2000; overflow-y: auto; }
-.menu.open{ left:0; }
-.search{ width:100%; padding:14px; border-radius:12px; border:1px solid #d0e8f0; outline: none; font-size: 16px; background: rgba(255,255,255,0.5); }
-.no-result-box { padding: 25px 0; font-size: 13px; color: #8b8175; line-height: 1.8; }
-.form-link { color: #4a6a7a; text-decoration: underline; font-weight: 500; }
+    /* ===== RESULTS ===== */
+    .results{ display:grid; gap:18px; margin-top: 25px; }
+    .movie{
+      background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px; padding:20px; display: flex; gap: 20px; align-items: center;
+      transition: all 0.4s; text-decoration: none; color: inherit;
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 0.8s ease backwards;
+    }
+    .movie-img{ width: 75px; height: 105px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
+    .movie-img img{ width: 100%; height: 100%; object-fit: cover; }
+    .movie-content h3 { margin: 6px 0 0; font-size: 18px; font-weight: 500; color: #3a5a6a; line-height: 1.4; }
+    .movie-meta { font-size: 12px; color: #5a7a8a; opacity: 0.7; }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* ===== MENU & SEARCH ===== */
+    .menu{ position:fixed; top:0; left:-340px; width:300px; height:100vh; background:rgba(255, 255, 255, 0.98); padding:100px 25px 60px; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index:2000; overflow-y: auto; }
+    .menu.open{ left:0; }
+    .search{ width:100%; padding:14px; border-radius:12px; border:1px solid #d0e8f0; outline: none; font-size: 16px; background: rgba(255,255,255,0.5); }
+    .no-result-box { padding: 25px 0; font-size: 13px; color: #8b8175; line-height: 1.8; }
+    .form-link { color: #4a6a7a; text-decoration: underline; font-weight: 500; }
 
-.overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.15); opacity:0; pointer-events:none; transition:.6s; z-index:1500; backdrop-filter: blur(4px); }
-.overlay.show{ opacity:1; pointer-events:auto; }
-</style>
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.15); opacity:0; pointer-events:none; transition:.6s; z-index:1500; backdrop-filter: blur(4px); }
+    .overlay.show{ opacity:1; pointer-events:auto; }
+  </style>
 </head>
 
 <body>
@@ -143,7 +152,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
   <input class="search" type="text" placeholder="作品名を探す" oninput="searchMovie(this.value)">
   <div id="searchResults"></div>
   <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center;">作品一覧を見てみる</a>
-  <!-- メニューの一番下に「たまりばについて」への動線を追加 -->
   <a href="about.html" style="display:block; margin-top:24px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center; opacity: 0.85;">たまりばについて</a>
 </div>
 
@@ -191,7 +199,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
       <div class="card" data-value="姉妹" onclick="toggleFilter('rel','姉妹',this)">姉妹</div>
       <div class="card" data-value="先輩と後輩" onclick="toggleFilter('rel','先輩と後輩',this)">先輩と後輩</div>
       <div class="card" data-value="先生と生徒" onclick="toggleFilter('rel','先生と生徒',this)">先生と生徒</div>
-      <div class="card" data-value="幼馴染" onclick="toggleFilter('幼馴染',this)">幼馴染</div>
+      <div class="card" data-value="幼馴染" onclick="toggleFilter('rel','幼馴染',this)">幼馴染</div>
       <div class="card" data-value="ライバル" onclick="toggleFilter('rel','ライバル',this)">ライバル</div>
       <div class="card" data-value="罪の共有" onclick="toggleFilter('rel','罪の共有',this)">罪の共有</div>
       <div class="card" data-value="復讐" onclick="toggleFilter('rel','復讐',this)">復讐</div>
@@ -227,7 +235,7 @@ fetch(url).then(r => r.json()).then(d => {
   movies = d;
   restoreUI();
   render();
-});
+}).catch(e => console.error("データ取得に失敗しました:", e));
 
 function saveState() {
   localStorage.setItem('yuri_state', JSON.stringify(state));
@@ -275,6 +283,7 @@ function selectCountry(val, el){
 }
 
 function toggleFilter(type, val, el){
+  if(!state[type]) return;
   if(state[type].includes(val)) state[type] = state[type].filter(x => x !== val);
   else state[type].push(val);
   if(el) el.classList.toggle("active");
@@ -337,14 +346,23 @@ function render(){
     return;
   }
 
-  area.innerHTML = list.map((m, i) => `
-    <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}" style="animation-delay: ${i * 0.1}s">
-      <div class="movie-img"><img src="${m.Image || ''}" onerror="this.style.opacity='0'"></div>
-      <div class="movie-content">
-        <div class="movie-meta">${m.Country} / ${m.Format}</div>
-        <h3>${m.Title}</h3>
-      </div>
-    </a>`).join("");
+  area.innerHTML = list.map((m, i) => {
+    const title = m.Title || "";
+    const country = m.Country || "";
+    const format = m.Format || "";
+    const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
+    
+    return `
+      <a class="movie" href="detail.html?title=${encodeURIComponent(title)}" style="animation-delay: ${i * 0.1}s">
+        <div class="movie-img">
+          <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
+        </div>
+        <div class="movie-content">
+          <div class="movie-meta">${country} / ${format}</div>
+          <h3>${title}</h3>
+        </div>
+      </a>`;
+  }).join("");
 }
 
 function toggleMenu(){ 
@@ -360,7 +378,6 @@ function searchMovie(keyword){
     area.innerHTML = `
       <div class="no-result-box">
         その作品は、まだたまりばに届いていないようです。<br>
-
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX4mou3VF1YV12yk7pMq7JWqekHbHNuhw7ufK0gxOhdJxo4Q/viewform?usp=sf_link" target="_blank" class="form-link">こちらから、耳打ちしてみませんか。</a>
       </div>`;
     return;
