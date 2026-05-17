@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>この場所について | 百合のたまりば</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&display=swap');
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background: #e0f2f7; 
+  color:#2b2b2b;
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  overflow-x: hidden;
+  line-height: 2; /* 文章を読みやすくするため少し広めに */
+  min-height: 100vh;
+}
+
+/* 背景装飾 */
+.bg-decor {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1; pointer-events: none;
+}
+.bg-circle {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  filter: blur(50px);
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed; top:0; left:0; width:100%;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 25px; background:rgba(255, 255, 255, 0.3);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
+}
+.back-btn {
+  text-decoration: none; color: #4a6a7a; font-size: 14px; letter-spacing: 0.1em;
+  display: flex; align-items: center; transition: 0.3s;
+}
+.back-btn:hover { opacity: 0.6; transform: translateX(-5px); }
+
+.logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); text-decoration: none; }
+
+/* ===== LAYOUT ===== */
+.container{ max-width:680px; margin:auto; padding:150px 24px 80px; animation: fadeIn 1.5s ease; }
+
+.about-card {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 40px;
+  padding: 50px 40px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.03);
+  text-align: center;
+}
+
+.about-title {
+  font-size: 22px; font-weight: 300; color: #3a5a6a; letter-spacing: 0.2em; margin-bottom: 40px;
+}
+
+.about-text {
+  font-size: 15px; color: #3b3b3b; text-align: left; max-width: 500px; margin: 0 auto 40px;
+  letter-spacing: 0.05em;
+}
+.about-text p { margin-bottom: 24px; }
+
+/* 耳打ち用リンクボタン */
+.whisper-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(74, 106, 122, 0.2);
+  border-radius: 30px;
+  color: #4a6a7a;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+.whisper-link:hover {
+  background: rgba(74, 106, 122, 0.1);
+  border-color: rgba(74, 106, 122, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 106, 122, 0.05);
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 600px) {
+  .about-card { padding: 40px 24px; border-radius: 30px; }
+  .container { padding-top: 110px; }
+  .logo { font-size: 15px; letter-spacing: 0.2em; }
+  .about-text { font-size: 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg-decor">
+  <div class="bg-circle" style="width: 60vw; height: 60vw; top: -20vw; right: -10vw;"></div>
+  <div class="bg-circle" style="width: 40vw; height: 40vw; bottom: -10vw; left: -10vw; opacity: 0.6;"></div>
+</div>
+
+<div class="topbar">
+  <!-- 左側：1ページ前に戻る -->
+  <a href="#" class="back-btn" onclick="history.back(); return false;">← 戻る</a>
+  <!-- 右側：ホームロゴ -->
+  <a href="index.html" class="logo">百合のたまりば</a>
+</div>
+
+<div class="container">
+  <div class="about-card">
+    <h1 class="about-title">たまりばについて</h1>
+    
+    <div class="about-text">
+      <p>世の中にある、「女性同士の特別な関係性・感情が描かれている作品」を、その時々の気分に合わせて見つけられるように作った小さな記録庫（たまりば）です。</p>
+      <p>今は管理人が好きな作品を収めている段階で、まだまだ十分な作品数ではありません。<br>みなさまからの耳打ちで、少しずつ育っていきます。</p>
+    </div>
+    
+    <!-- 耳打ちボタン（ href="" の中に、GoogleフォームやWavebox、マシュマロなどのURLを入れてください ） -->
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX4mou3VF1YV12yk7pMq7JWqekHbHNuhw7ufK0gxOhdJxo4Q/viewform?usp=header" target="_blank" class="whisper-link">
+      <span>こちらから好きな作品をそっと耳打ちしてみませんか。</span>
+    </a>
+  </div>
+</div>
+
+<script>
+// ホームでの背景色（深さ）を引き継ぐ
+const savedState = JSON.parse(localStorage.getItem('yuri_state'));
+if (savedState && savedState.depth) {
+  const val = savedState.depth;
+  const r = 224 - (val - 1) * 12;
+  const g = 242 - (val - 1) * 15;
+  const b = 247 - (val - 1) * 10;
+  document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+}
+</script>
+
+</body>
+</html>
