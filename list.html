@@ -49,7 +49,14 @@ body{
 /* ===== LAYOUT ===== */
 .container{ max-width:800px; margin:auto; padding:120px 24px 80px; }
 .page-title { font-size: 24px; font-weight: 300; text-align: center; color: #4a6a7a; letter-spacing: 0.2em; margin-bottom: 40px; }
-#counter { text-align: center; font-size: 13px; color: #5a7a8a; margin-bottom: 20px; letter-spacing: 0.1em; }
+#counter { text-align: center; font-size: 13px; color: #5a7a8a; margin-bottom: 40px; letter-spacing: 0.1em; }
+
+/* ===== COUNTRY BLOCK ===== */
+.country-section { margin-bottom: 50px; animation: fadeInUp 1.5s ease backwards; }
+.country-title {
+  font-size: 18px; font-weight: 500; color: #3a5a6a; margin-bottom: 15px; padding-bottom: 5px;
+  border-bottom: 1px dashed rgba(74, 106, 122, 0.3); letter-spacing: 0.1em;
+}
 
 /* ===== LIST ===== */
 .results{ display:grid; gap:18px; }
@@ -58,7 +65,6 @@ body{
   border-radius: 20px; padding:20px; display: flex; gap: 20px; align-items: center;
   transition: all 0.4s; text-decoration: none; color: inherit;
   backdrop-filter: blur(10px);
-  animation: fadeInUp 0.8s ease backwards;
 }
 .movie:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
 .movie-img{ width: 75px; height: 105px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
@@ -94,7 +100,7 @@ body{
 <script>
 const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
 
-// ホームでの背景色を引き継ぐ（あれば）
+// ホームでの背景色を引き継ぐ
 const savedState = JSON.parse(localStorage.getItem('yuri_state'));
 if (savedState && savedState.depth) {
   const val = savedState.depth;
@@ -108,10 +114,7 @@ fetch(url)
   .then(r => r.json())
   .then(data => {
     if (data && data.length > 0) {
-      // タイトルの辞書順（五十音・アルファベット順）に並び替える場合
-      data.sort((a, b) => (a.Title || "").localeCompare(b.Title || "", 'ja'));
-      
-      renderList(data);
+      renderCountryGroupList(data);
     } else {
       document.getElementById('contentArea').innerHTML = '<div id="loading">登録されている作品がありません。</div>';
     }
@@ -120,25 +123,59 @@ fetch(url)
     document.getElementById('contentArea').innerHTML = '<div id="loading">データの読み込みに失敗しました。</div>';
   });
 
-function renderList(list) {
-  document.getElementById('counter').innerText = `全 ${list.length} 作品`;
+function renderCountryGroupList(data) {
+  document.getElementById('counter').innerText = `全 ${data.length} 作品`;
   const area = document.getElementById('contentArea');
   
-  const html = `
-    <div class="results">
-      ${list.map((m, i) => `
-        <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}" style="animation-delay: ${i * 0.05}s">
-          <div class="movie-img">
-            <img src="${m.Image || ''}" onerror="this.style.opacity='0'">
-          </div>
-          <div class="movie-content">
-            <div class="movie-meta">${m.Country || '---'} / ${m.Format || '---'}</div>
-            <h3>${m.Title}</h3>
-          </div>
-        </a>
-      `).join("")}
-    </div>
-  `;
+  // 1. トップページの並び順（日本、韓国、タイ…）の配列を用意
+  const countryOrder = ["日本", "韓国", "タイ", "台湾", "中国", "アメリカ", "フランス", "イタリア"];
+  
+  // 2. 国ごとにデータを仕分ける（スプレッドシートに未知の国があれば後ろに回す）
+  const groups = {};
+  data.forEach(m => {
+    const country = m.Country || "その他";
+    if (!groups[country]) groups[country] = [];
+    groups[country].push(m);
+  });
+
+  // 3. 表示する国の順番を決定
+  const sortedCountries = Object.keys(groups).sort((a, b) => {
+    let idxA = countryOrder.indexOf(a);
+    let idxB = countryOrder.indexOf(b);
+    if (idxA === -1) idxA = 999;
+    if (idxB === -1) idxB = 999;
+    return idxA - idxB;
+  });
+
+  // 4. HTMLの組み立て
+  let html = "";
+  
+  sortedCountries.forEach(country => {
+    const list = groups[country];
+    
+    // 各国内でタイトル50音順（辞書順）にソート
+    list.sort((a, b) => (a.Title || "").localeCompare(b.Title || "", 'ja'));
+    
+    html += `
+      <div class="country-section">
+        <h2 class="country-title">${country} (${list.length})</h2>
+        <div class="results">
+          ${list.map(m => `
+            <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}">
+              <div class="movie-img">
+                <img src="${m.Image || ''}" onerror="this.style.opacity='0'">
+              </div>
+              <div class="movie-content">
+                <div class="movie-meta">${m.Format || '---'}</div>
+                <h3>${m.Title}</h3>
+              </div>
+            </a>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  });
+  
   area.innerHTML = html;
 }
 </script>
