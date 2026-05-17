@@ -15,7 +15,6 @@ body{
   background: #e0f2f7; 
   color:#2b2b2b;
   font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  /* スマホでの可読性を考え、基本サイズを16pxに向上 */
   font-size: 16px;
   overflow-x: hidden;
   line-height: 1.8;
@@ -172,7 +171,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
       <div class="card" data-value="映画" onclick="toggleFilter('format','映画',this)">映画</div>
       <div class="card" data-value="ドラマ" onclick="toggleFilter('format','ドラマ',this)">ドラマ</div>
       <div class="card" data-value="アニメ" onclick="toggleFilter('format','アニメ',this)">アニメ</div>
-      <div class="card" data-value="漫画" onclick="toggleFilter('漫画',this)">漫画</div>
+      <div class="card" data-value="漫画" onclick="toggleFilter('format','漫画',this)">漫画</div>
       <div class="card" data-value="小説" onclick="toggleFilter('format','小説',this)">小説</div>
       <div class="card" data-value="ゲーム" onclick="toggleFilter('format','ゲーム',this)">ゲーム</div>
       <div class="card" data-value="MV" onclick="toggleFilter('format','MV',this)">MV</div>
