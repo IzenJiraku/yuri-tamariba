@@ -40,7 +40,8 @@ body{
   backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
 }
-.logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+/* aタグ化に伴うスタイルの微調整（カラーと下線無効化） */
+.logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); text-decoration: none; }
 .menu-btn{
   width: 48px; height: 48px; background: rgba(255, 255, 255, 0.4);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -134,7 +135,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <div class="topbar">
-  <div class="logo">百合のたまりば</div>
+  <a href="index.html" class="logo">百合のたまりば</a>
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
 </div>
 
@@ -142,6 +143,8 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
   <input class="search" type="text" placeholder="作品名を探す" oninput="searchMovie(this.value)">
   <div id="searchResults"></div>
   <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center;">作品一覧を見てみる</a>
+  <!-- メニューの一番下に「たまりばについて」への動線を追加 -->
+  <a href="about.html" style="display:block; margin-top:24px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center; opacity: 0.85;">たまりばについて</a>
 </div>
 
 <div class="container">
@@ -188,7 +191,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
       <div class="card" data-value="姉妹" onclick="toggleFilter('rel','姉妹',this)">姉妹</div>
       <div class="card" data-value="先輩と後輩" onclick="toggleFilter('rel','先輩と後輩',this)">先輩と後輩</div>
       <div class="card" data-value="先生と生徒" onclick="toggleFilter('rel','先生と生徒',this)">先生と生徒</div>
-      <div class="card" data-value="幼馴染" onclick="toggleFilter('rel','幼馴染',this)">幼馴染</div>
+      <div class="card" data-value="幼馴染" onclick="toggleFilter('幼馴染',this)">幼馴染</div>
       <div class="card" data-value="ライバル" onclick="toggleFilter('rel','ライバル',this)">ライバル</div>
       <div class="card" data-value="罪の共有" onclick="toggleFilter('rel','罪の共有',this)">罪の共有</div>
       <div class="card" data-value="復讐" onclick="toggleFilter('rel','復讐',this)">復讐</div>
@@ -204,7 +207,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
     </div>
   </div>
 
-  <!-- 結果表示セクション -->
   <div class="section" id="resultsSection" style="display:none;">
     <div class="section-title">たまりばの作品たち</div>
     <div id="activeTags" class="active-filters"></div>
