@@ -48,8 +48,23 @@ body{
 
 /* ===== LAYOUT ===== */
 .container{ max-width:800px; margin:auto; padding:120px 24px 80px; }
-.page-title { font-size: 24px; font-weight: 300; text-align: center; color: #4a6a7a; letter-spacing: 0.2em; margin-bottom: 40px; }
-#counter { text-align: center; font-size: 13px; color: #5a7a8a; margin-bottom: 40px; letter-spacing: 0.1em; }
+.page-title { font-size: 24px; font-weight: 300; text-align: center; color: #4a6a7a; letter-spacing: 0.2em; margin-bottom: 20px; }
+#counter { text-align: center; font-size: 13px; color: #5a7a8a; margin-bottom: 25px; letter-spacing: 0.1em; }
+
+/* ===== SORT SWITCH ===== */
+.sort-switch {
+  display: flex; justify-content: center; gap: 10px; margin-bottom: 40px;
+}
+.sort-btn {
+  background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(74, 106, 122, 0.2);
+  padding: 6px 18px; border-radius: 20px; font-size: 13px; color: #5a7a8a;
+  cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.05em;
+  font-family: inherit;
+}
+.sort-btn.active {
+  background: rgba(74, 106, 122, 0.15); border-color: rgba(74, 106, 122, 0.4);
+  color: #3a5a6a; font-weight: 500;
+}
 
 /* ===== COUNTRY BLOCK ===== */
 .country-section { margin-bottom: 50px; animation: fadeInUp 1.5s ease backwards; }
@@ -86,19 +101,28 @@ body{
 </div>
 
 <div class="topbar">
-  <a href="index.html" class="back-btn">← たまりばへ戻る</a>
+  <a href="index.html" class="back-btn">← 百合のたまりばへ戻る</a>
 </div>
 
 <div class="container">
   <h1 class="page-title">作品一覧</h1>
   <div id="counter"></div>
+  
+  <!-- ソート切り替えボタン -->
+  <div class="sort-switch">
+    <button id="btnName" class="sort-btn active" onclick="changeSort('name')">50音順</button>
+    <button id="btnYear" class="sort-btn" onclick="changeSort('year')">年代順 (古い順)</button>
+  </div>
+
   <div id="contentArea">
-    <div id="loading">たまりばの記録を開いています...</div>
+    <div id="loading">物語の記録を開いています...</div>
   </div>
 </div>
 
 <script>
 const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
+let allMovies = []; // 取得した生データを保持する変数
+let currentSort = "name"; // 現在のソート状態（name または year）
 
 // ホームでの背景色を引き継ぐ
 const savedState = JSON.parse(localStorage.getItem('yuri_state'));
@@ -114,7 +138,8 @@ fetch(url)
   .then(r => r.json())
   .then(data => {
     if (data && data.length > 0) {
-      renderCountryGroupList(data);
+      allMovies = data;
+      renderCountryGroupList();
     } else {
       document.getElementById('contentArea').innerHTML = '<div id="loading">登録されている作品がありません。</div>';
     }
@@ -123,22 +148,33 @@ fetch(url)
     document.getElementById('contentArea').innerHTML = '<div id="loading">データの読み込みに失敗しました。</div>';
   });
 
-function renderCountryGroupList(data) {
-  document.getElementById('counter').innerText = `全 ${data.length} 作品`;
+function changeSort(type) {
+  if (currentSort === type) return;
+  currentSort = type;
+  
+  // ボタンの見た目の切り替え
+  document.getElementById('btnName').classList.toggle('active', type === 'name');
+  document.getElementById('btnYear').classList.toggle('active', type === 'year');
+  
+  // 再描画
+  renderCountryGroupList();
+}
+
+function renderCountryGroupList() {
+  document.getElementById('counter').innerText = `全 ${allMovies.length} 作品`;
   const area = document.getElementById('contentArea');
   
-  // 1. トップページの並び順（日本、韓国、タイ…）の配列を用意
   const countryOrder = ["日本", "韓国", "タイ", "台湾", "中国", "アメリカ", "フランス", "イタリア"];
   
-  // 2. 国ごとにデータを仕分ける（スプレッドシートに未知の国があれば後ろに回す）
+  // 1. 国ごとに仕分ける
   const groups = {};
-  data.forEach(m => {
+  allMovies.forEach(m => {
     const country = m.Country || "その他";
     if (!groups[country]) groups[country] = [];
     groups[country].push(m);
   });
 
-  // 3. 表示する国の順番を決定
+  // 2. 表示する国の順番を決定
   const sortedCountries = Object.keys(groups).sort((a, b) => {
     let idxA = countryOrder.indexOf(a);
     let idxB = countryOrder.indexOf(b);
@@ -147,14 +183,24 @@ function renderCountryGroupList(data) {
     return idxA - idxB;
   });
 
-  // 4. HTMLの組み立て
+  // 3. HTMLの組み立て
   let html = "";
   
   sortedCountries.forEach(country => {
     const list = groups[country];
     
-    // 各国内でタイトル50音順（辞書順）にソート
-    list.sort((a, b) => (a.Title || "").localeCompare(b.Title || "", 'ja'));
+    // 現在のソート状態に合わせて各国内を並び替える
+    if (currentSort === "name") {
+      // 50音順ソート
+      list.sort((a, b) => (a.Title || "").localeCompare(b.Title || "", 'ja'));
+    } else if (currentSort === "year") {
+      // 年代順（古い順）ソート。Yearが未登録（空文字）のものは後ろに回す
+      list.sort((a, b) => {
+        const yearA = a.Year ? parseInt(a.Year) : 9999;
+        const yearB = b.Year ? parseInt(b.Year) : 9999;
+        return yearA - yearB;
+      });
+    }
     
     html += `
       <div class="country-section">
@@ -166,7 +212,7 @@ function renderCountryGroupList(data) {
                 <img src="${m.Image || ''}" onerror="this.style.opacity='0'">
               </div>
               <div class="movie-content">
-                <div class="movie-meta">${m.Format || '---'}</div>
+                <div class="movie-meta">${m.Year || '----'} / ${m.Format || '---'}</div>
                 <h3>${m.Title}</h3>
               </div>
             </a>
