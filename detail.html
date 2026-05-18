@@ -149,7 +149,7 @@ if (!targetTitle) {
       if (item) {
         renderDetail(item);
       } else {
-        document.getElementById('contentArea').innerHTML = '<div id="loading">作品の詳細は、まだ届いていないようです。</div>';
+        document.getElementById('contentArea').innerHTML = '<div id="loading">作品の詳細がまだ届いてないみたい。</div>';
       }
     })
     .catch(e => {
@@ -187,7 +187,7 @@ function renderDetail(m) {
           ${movieMoods.map(t => `<span class="tag">#${t.trim()}</span>`).join('')}
         </div>
 
-        <div class="description">${m.Comment || '作品の説明はまだ登録されていません。'}</div>
+        <div class="description">${m.Comment || 'まだコメントが流れ着いていないみたい。'}</div>
         
         ${m.Link ? `
           <a href="${m.Link}" target="_blank" class="external-link">
