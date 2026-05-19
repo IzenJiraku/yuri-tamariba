@@ -86,8 +86,23 @@ body{
 .movie:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
 .movie-img{ width: 75px; height: 105px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
 .movie-img img{ width: 100%; height: 100%; object-fit: cover; }
-.movie-content h3 { margin: 6px 0 0; font-size: 18px; font-weight: 500; color: #3a5a6a; line-height: 1.4; }
+.movie-content { flex-grow: 1; min-width: 0; } /* 横幅が狭いときに文字がはみ出るのを防ぐ設定 */
+.movie-content h3 { margin: 4px 0 6px; font-size: 18px; font-weight: 500; color: #3a5a6a; line-height: 1.4; }
 .movie-meta { font-size: 12px; color: #5a7a8a; opacity: 0.7; }
+
+/* ===== 【追加】カード内タグ用の装飾 ===== */
+.movie-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.mini-tag {
+  font-size: 11px; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.05em; line-height: 1.4;
+}
+/* 関係性タグ（落ち着いた青磁色系） */
+.mini-tag.rel {
+  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(160, 216, 239, 0.5); color: #4a6a7a;
+}
+/* 心地・沈み具合タグ（ほんのり温かみのあるセピア・ベージュ系） */
+.mini-tag.mood {
+  background: rgba(245, 238, 230, 0.6); border: 1px solid rgba(139, 129, 117, 0.25); color: #7a6e60;
+}
 
 #loading { text-align: center; padding: 100px; font-size: 14px; color: #4a6a7a; letter-spacing: 0.2em; }
 
@@ -205,17 +220,38 @@ function renderCountryGroupList() {
       <div class="country-section">
         <h2 class="country-title">${country} (${list.length})</h2>
         <div class="results">
-          ${list.map(m => `
-            <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}">
-              <div class="movie-img">
-                <img src="${m.Image || ''}" onerror="this.style.opacity='0'">
-              </div>
-              <div class="movie-content">
-                <div class="movie-meta">${m.Year || '----'} / ${m.Format || '---'}</div>
-                <h3>${m.Title}</h3>
-              </div>
-            </a>
-          `).join("")}
+          ${list.map(m => {
+            // 【変更】関係性（Relationship）と心地（Mood）をタグに変換するロジック
+            let tagsHtml = "";
+            
+            if (m.Relationship) {
+              m.Relationship.split(/[,、]/).forEach(r => {
+                if(r.trim()) tagsHtml += `<span class="mini-tag rel">${r.trim()}</span>`;
+              });
+            }
+            
+            if (m.Mood) {
+              m.Mood.split(/[,、]/).forEach(mood => {
+                if(mood.trim()) tagsHtml += `<span class="mini-tag mood">${mood.trim()}</span>`;
+              });
+            }
+
+            return `
+              <a class="movie" href="detail.html?title=${encodeURIComponent(m.Title)}">
+                <div class="movie-img">
+                  <img src="${m.Image || ''}" onerror="this.style.opacity='0'">
+                </div>
+                <div class="movie-content">
+                  <div class="movie-meta">${m.Year || '----'} / ${m.Format || '---'}</div>
+                  <h3>${m.Title}</h3>
+                  <!-- 【追加】生成したタグの配置スペース -->
+                  <div class="movie-tags">
+                    ${tagsHtml}
+                  </div>
+                </div>
+              </a>
+            `;
+          }).join("")}
         </div>
       </div>
     `;
