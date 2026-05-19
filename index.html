@@ -25,13 +25,14 @@
       font-size: 16px;
       overflow-x: hidden;
       line-height: 1.8;
-      transition: background-color 2s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: background-color 2.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     /* 背景の装飾 */
     .bg-decor {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: -1; pointer-events: none; overflow: hidden;
+      transition: opacity 1s;
     }
     .bg-circle {
       position: absolute; border-radius: 50%;
@@ -46,6 +47,7 @@
       padding:15px 25px; background:rgba(255, 255, 255, 0.3);
       backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
       border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
+      transition: opacity 0.5s, transform 0.5s;
     }
     .logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); text-decoration: none; }
     .menu-btn{
@@ -56,7 +58,7 @@
     }
 
     /* ===== LAYOUT ===== */
-    .container{ max-width:800px; margin:auto; padding:140px 20px 100px; }
+    .container{ max-width:800px; margin:auto; padding:140px 20px 100px; transition: opacity 0.8s, filter 0.8s; }
     .hero { text-align: center; margin-bottom: 60px; animation: fadeIn 2s ease; }
     .hero h1{ font-size:30px; font-weight:300; margin:0 0 25px 0; letter-spacing: 0.25em; color: #4a6a7a; }
     .hero-main-text { font-size: 15px; color: #5a7a8a; letter-spacing: 0.05em; opacity: 0.9; }
@@ -146,11 +148,47 @@
     .movie-meta { font-size: 12px; color: #5a7a8a; opacity: 0.7; }
 
     /* ===== MENU & SEARCH ===== */
-    .menu{ position:fixed; top:0; left:-340px; width:300px; height:100vh; background:rgba(255, 255, 255, 0.98); padding:100px 25px 60px; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index:2000; overflow-y: auto; }
+    .menu{ 
+      position:fixed; top:0; left:-340px; width:300px; height:100vh; 
+      background:rgba(255, 255, 255, 0.98); padding:100px 30px 60px; 
+      transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index:2000; 
+      overflow-y: auto; display: flex; flex-direction: column;
+    }
     .menu.open{ left:0; }
-    .search{ width:100%; padding:14px; border-radius:12px; border:1px solid #d0e8f0; outline: none; font-size: 16px; background: rgba(255,255,255,0.5); }
+    
+    /* 検索窓を細い明朝体に指定 */
+    .search{ 
+      width:100%; padding:14px 0; border:none; border-bottom:1px solid #d0e8f0; 
+      outline: none; font-size: 15px; background: transparent;
+      font-family: "Noto Serif JP", serif; font-weight: 300; color: #2b2b2b;
+      border-radius: 0;
+    }
+    .search::placeholder {
+      font-family: "Noto Serif JP", serif; font-weight: 300; color: #9aafba; opacity: 1;
+    }
+    
+    #searchResults {
+      font-family: "Noto Serif JP", serif; font-weight: 300;
+    }
+
     .no-result-box { padding: 25px 0; font-size: 13px; color: #8b8175; line-height: 1.8; }
     .form-link { color: #4a6a7a; text-decoration: underline; font-weight: 500; }
+
+    /* メニュー内のリンク・ボタンをすべて左揃え・エフェクトなしの明朝体テキストに */
+    .menu-link-item, .menu-btn-item {
+      display: block; text-align: left; background: none; border: none; padding: 14px 0;
+      margin: 0; width: 100%; text-decoration: none; color: #4a6a7a; font-size: 14px;
+      font-family: "Noto Serif JP", serif; font-weight: 300; cursor: pointer; letter-spacing: 0.1em;
+      outline: none; -webkit-appearance: none;
+    }
+    .menu-link-item:hover, .menu-btn-item:hover {
+      color: #2b2b2b; /* ほんの少し文字色が濃くなるだけの上品な変化 */
+    }
+
+    /* 最下部に固定するためのマージン制御 */
+    .menu-footer-group {
+      margin-top: auto; padding-top: 30px;
+    }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -159,43 +197,20 @@
     .overlay.show{ opacity:1; pointer-events:auto; }
 
     /* ===== RANDOM MODAL ===== */
-    .random-btn {
-      display: block;
-      margin: 40px auto 0;
-      padding: 12px 24px;
-      font-size: 13px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(199, 233, 245, 0.4));
-      border: 1px solid rgba(160, 216, 239, 0.6);
-      color: #4a6a7a;
-      border-radius: 30px;
-      cursor: pointer;
-      letter-spacing: 0.15em;
-      transition: all 0.4s;
-      font-family: inherit;
-    }
-    .random-btn:hover {
-      background: rgba(199, 233, 245, 0.8);
-      transform: translateY(-1px);
-    }
     .random-modal {
-      position: fixed;
-      top: 50%; left: 50%;
+      position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
       width: 85%; max-width: 400px;
       background: rgba(255, 255, 255, 0.98);
       border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 24px;
-      padding: 35px 24px 30px;
+      border-radius: 24px; padding: 35px 24px 30px;
       box-shadow: 0 20px 50px rgba(74, 106, 122, 0.15);
-      z-index: 2500;
-      opacity: 0; pointer-events: none;
+      z-index: 2500; opacity: 0; pointer-events: none;
       transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-      backdrop-filter: blur(15px);
-      text-align: center;
+      backdrop-filter: blur(15px); text-align: center;
     }
     .random-modal.show {
-      opacity: 1; pointer-events: auto;
-      transform: translate(-50%, -50%) scale(1);
+      opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1);
     }
     .random-modal-close {
       position: absolute; top: 15px; right: 20px;
@@ -203,32 +218,81 @@
       transition: opacity 0.3s;
     }
     .random-modal-close:hover { opacity: 1; }
+
+    /* ===== 定点観測（スライドショー）シアターモード ===== */
+    .theater-mode {
+      position: fixed; inset: 0; z-index: 3000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 1.5s ease; padding: 30px;
+    }
+    .theater-mode.show { opacity: 1; pointer-events: auto; }
+    
+    .theater-card-wrapper {
+      max-width: 450px; width: 100%; text-align: center;
+      opacity: 0; transform: translateY(15px);
+      transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .theater-card-wrapper.visible { opacity: 1; transform: translateY(0); }
+
+    .theater-img {
+      width: 130px; height: 182px; margin: 0 auto 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12); border-radius: 12px;
+      overflow: hidden; background: rgba(255,255,255,0.2);
+    }
+    .theater-img img { width: 100%; height: 100%; object-fit: cover; }
+    .theater-meta { font-size: 13px; color: #5a7a8a; opacity: 0.7; letter-spacing: 0.1em; margin-bottom: 12px; }
+    .theater-title { font-size: 24px; font-weight: 500; color: #3a5a6a; line-height: 1.5; margin: 0 0 20px 0; }
+    .theater-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 40px; max-width: 90%; margin-left: auto; margin-right: auto;}
+    .theater-tag-item { font-size: 11px; background: rgba(255,255,255,0.5); padding: 4px 10px; border-radius: 12px; color: #4a6a7a; border: 1px solid rgba(255,255,255,0.6); }
+
+    .theater-close-btn {
+      position: absolute; bottom: 50px;
+      background: none; border: 1px solid #4a6a7a; color: #4a6a7a;
+      padding: 12px 30px; font-size: 12px; border-radius: 30px;
+      cursor: pointer; letter-spacing: 0.2em; opacity: 0.6;
+      transition: all 0.4s; font-family: inherit;
+    }
+    .theater-close-btn:hover { opacity: 1; background: rgba(255,255,255,0.3); }
+
+    /* 通常UI消去用クラス */
+    .ui-hidden { opacity: 0 !important; pointer-events: none !important; transform: translateY(-20px); }
   </style>
 </head>
 
 <body>
 
-<div class="bg-decor">
+<div class="bg-decor" id="bgDecor">
   <div class="bg-circle" style="width: 60vw; height: 60vw; top: -20vw; right: -10vw;"></div>
   <div class="bg-circle" style="width: 40vw; height: 40vw; bottom: -10vw; left: -10vw; opacity: 0.6;"></div>
 </div>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<div class="topbar">
+<div class="topbar" id="topbar">
   <a href="index.html" class="logo">百合のたまりば</a>
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
 </div>
 
 <div class="menu" id="menu">
+  <!-- 検索窓 -->
   <input class="search" type="text" placeholder="作品名を探す" oninput="searchMovie(this.value)">
   <div id="searchResults"></div>
-  <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center;">作品一覧を見てみる</a>
-  <a href="about.html" style="display:block; margin-top:24px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center; opacity: 0.85;">たまりばについて</a>
-  <button class="random-btn" onclick="showRandomMovie()">偶然の出会いに委ねる</button>
+  
+  <!-- メニューコンテンツ（上部グループ） -->
+  <div style="margin-top: 30px;">
+    <a href="list.html" class="menu-link-item">作品一覧を見てみる</a>
+    <button class="menu-btn-item" onclick="showRandomMovie()">偶然の出会いに委ねる</button>
+    <button class="menu-btn-item" onclick="startTheaterMode()">スライドショー</button>
+  </div>
+
+  <!-- メニューコンテンツ（最下部グループ） -->
+  <div class="menu-footer-group">
+    <a href="about.html" class="menu-link-item" style="opacity: 0.8;">たまりばについて</a>
+  </div>
 </div>
 
-<div class="container">
+<div class="container" id="mainContainer">
   <div class="hero">
     <h1>百合のたまりば</h1>
     <div class="hero-main-text">
@@ -273,10 +337,17 @@
   </div>
 </div>
 
+<!-- ランダム表示用モーダル -->
 <div class="random-modal" id="randomModal">
   <div class="random-modal-close" onclick="closeRandomModal()">×</div>
   <div style="font-size: 11px; color: #8b8175; letter-spacing: 0.15em; margin-bottom: 20px;">本日のあなたへ</div>
   <div id="randomResultContent"></div>
+</div>
+
+<!-- 定点観測（スライドショー）エリア -->
+<div class="theater-mode" id="theaterMode">
+  <div class="theater-card-wrapper" id="theaterCardWrapper"></div>
+  <button class="theater-close-btn" onclick="stopTheaterMode()">現実の呼吸に戻る</button>
 </div>
 
 <script>
@@ -291,6 +362,7 @@ if (typeof state.country === 'string') {
 }
 
 let isOtherCountriesOpen = false;
+let theaterInterval = null; 
 
 fetch(url).then(r => r.json()).then(d => {
   movies = d;
@@ -404,15 +476,19 @@ function restoreUI() {
   updateDepth(state.depth, false);
 }
 
+function changeBackgroundColorByDepth(depthVal) {
+  const r = 224 - (depthVal - 1) * 12;
+  const g = 242 - (depthVal - 1) * 15;
+  const b = 247 - (depthVal - 1) * 10;
+  document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+}
+
 function updateDepth(val, shouldRender = true) {
   state.depth = parseInt(val);
   const labels = ["ピュアな", "リアルな", "アダルトな", "ウェットな", "ヘビーな"];
   document.getElementById("depthLabel").innerText = labels[val - 1];
    
-  const r = 224 - (val - 1) * 12;
-  const g = 242 - (val - 1) * 15;
-  const b = 247 - (val - 1) * 10;
-  document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+  changeBackgroundColorByDepth(state.depth);
 
   if(shouldRender) {
     saveState();
@@ -481,23 +557,16 @@ function clearFilters() {
   render();
 }
 
-// ===== 【修正】国：OR検索、媒体：OR検索、関係性：AND検索 ロジック =====
 function getFilteredMovies(){
   if (state.country.length === 0 && state.format.length === 0 && state.rel.length === 0) return null;
 
   return movies.filter(m => {
-    // 1. 国は選択肢の「いずれか」に一致（OR検索）
     const okC = state.country.length === 0 || state.country.includes(m.Country);
-    
-    // 2. 媒体は選択肢の「いずれか」に一致（OR検索にアップデート）
     const movieFormats = (m.Format || "").split(/[,、]/).map(f => f.trim());
     const okF = state.format.length === 0 || state.format.some(v => movieFormats.includes(v));
-    
-    // 3. 関係性は選択肢が「すべて」含まれているか（しっかりAND検索）
-    const movieRels = (m.Relationship || "").split(/[,、]/).map(r => r.trim());
+    const movieRels = (m.Relationship || "").split(/[,、]/).map(r => r.trim()).filter(Boolean);
     const okR = state.rel.length === 0 || state.rel.every(v => movieRels.includes(v));
     
-    // 4. 深さ（気分のマッチ度）
     const movieMoods = (m.Mood || "").split(/[,、]/).filter(Boolean);
     const movieMaxDepth = movieMoods.length > 0 ? Math.max(...movieMoods.map(mood => moodDepthMap[mood.trim()] || 1)) : 1;
     
@@ -570,10 +639,7 @@ function searchMovie(keyword){
 }
 
 function showRandomMovie() {
-  if (!movies || movies.length === 0) {
-    alert("物語が届くのを待っています。少し時間を置いて再度お試しください。");
-    return;
-  }
+  if (!movies || movies.length === 0) return;
   document.getElementById("menu").classList.remove("open");
 
   const randomIndex = Math.floor(Math.random() * movies.length);
@@ -603,6 +669,72 @@ function showRandomMovie() {
 function closeRandomModal() {
   document.getElementById("randomModal").classList.remove("show");
   document.getElementById("overlay").classList.remove("show");
+}
+
+function startTheaterMode() {
+  if (!movies || movies.length === 0) return;
+  
+  document.getElementById("menu").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+
+  document.getElementById("topbar").classList.add("ui-hidden");
+  document.getElementById("mainContainer").classList.add("ui-hidden");
+  document.getElementById("bgDecor").style.opacity = "0";
+
+  const theater = document.getElementById("theaterMode");
+  theater.classList.add("show");
+
+  nextTheaterSlide();
+  theaterInterval = setInterval(nextTheaterSlide, 5000);
+}
+
+function nextTheaterSlide() {
+  const wrapper = document.getElementById("theaterCardWrapper");
+  wrapper.classList.remove("visible");
+
+  setTimeout(() => {
+    const randomIndex = Math.floor(Math.random() * movies.length);
+    const m = movies[randomIndex];
+
+    const title = m.Title || "";
+    const country = m.Country || "";
+    const format = m.Format || "";
+    const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
+    const rels = (m.Relationship || "").split(/[,、]/).map(r => r.trim()).filter(Boolean);
+
+    const movieMoods = (m.Mood || "").split(/[,、]/).filter(Boolean);
+    const mDepth = movieMoods.length > 0 ? Math.max(...movieMoods.map(mood => moodDepthMap[mood.trim()] || 1)) : 1;
+    changeBackgroundColorByDepth(mDepth);
+
+    const tagsHtml = rels.map(r => `<span class="theater-tag-item">${r}</span>`).join("");
+
+    wrapper.innerHTML = `
+      <a href="detail.html?title=${encodeURIComponent(title)}" style="text-decoration: none; color: inherit; display: block;">
+        <div class="theater-img">
+          <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
+        </div>
+        <div class="theater-meta">${country} / ${format}</div>
+        <h2 class="theater-title">${title}</h2>
+        <div class="theater-tags">${tagsHtml}</div>
+      </a>
+    `;
+
+    wrapper.classList.add("visible");
+  }, 400);
+}
+
+function stopTheaterMode() {
+  clearInterval(theaterInterval);
+  
+  document.getElementById("theaterMode").classList.remove("show");
+  document.getElementById("theaterCardWrapper").classList.remove("visible");
+
+  setTimeout(() => {
+    document.getElementById("topbar").classList.remove("ui-hidden");
+    document.getElementById("mainContainer").classList.remove("ui-hidden");
+    document.getElementById("bgDecor").style.opacity = "1";
+    changeBackgroundColorByDepth(state.depth);
+  }, 300);
 }
 </script>
 
