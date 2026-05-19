@@ -131,6 +131,52 @@
 
     .overlay{ position:fixed; inset:0; background:rgba(74, 106, 122, 0.15); opacity:0; pointer-events:none; transition:.6s; z-index:1500; backdrop-filter: blur(4px); }
     .overlay.show{ opacity:1; pointer-events:auto; }
+
+    /* ===== 【追加】今日の一本用ボタン＆モーダルの装飾 ===== */
+    .random-btn {
+      display: block;
+      margin: 40px auto 0;
+      padding: 12px 24px;
+      font-size: 13px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(199, 233, 245, 0.4));
+      border: 1px solid rgba(160, 216, 239, 0.6);
+      color: #4a6a7a;
+      border-radius: 30px;
+      cursor: pointer;
+      letter-spacing: 0.15em;
+      transition: all 0.4s;
+      font-family: inherit;
+    }
+    .random-btn:hover {
+      background: rgba(199, 233, 245, 0.8);
+      transform: translateY(-1px);
+    }
+    .random-modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      width: 85%; max-width: 400px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 24px;
+      padding: 35px 24px 30px;
+      box-shadow: 0 20px 50px rgba(74, 106, 122, 0.15);
+      z-index: 2500;
+      opacity: 0; pointer-events: none;
+      transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      backdrop-filter: blur(15px);
+      text-align: center;
+    }
+    .random-modal.show {
+      opacity: 1; pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .random-modal-close {
+      position: absolute; top: 15px; right: 20px;
+      font-size: 22px; color: #8b8175; cursor: pointer; opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+    .random-modal-close:hover { opacity: 1; }
   </style>
 </head>
 
@@ -153,6 +199,9 @@
   <div id="searchResults"></div>
   <a href="list.html" style="display:block; margin-top:40px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center;">作品一覧を見てみる</a>
   <a href="about.html" style="display:block; margin-top:24px; text-decoration:none; color:#4a6a7a; font-size:14px; text-align:center; opacity: 0.85;">たまりばについて</a>
+  
+  <!-- 【追加】メニュー最下部に設置したボタン -->
+  <button class="random-btn" onclick="showRandomMovie()">偶然の出会いを楽しむ</button>
 </div>
 
 <div class="container">
@@ -223,6 +272,13 @@
   </div>
 </div>
 
+<!-- 【追加】ランダム結果を表示するポップアップ（モーダル） -->
+<div class="random-modal" id="randomModal">
+  <div class="random-modal-close" onclick="closeRandomModal()">×</div>
+  <div style="font-size: 11px; color: #8b8175; letter-spacing: 0.15em; margin-bottom: 20px;">本日のあなたへ</div>
+  <div id="randomResultContent"></div>
+</div>
+
 <script>
 const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
 let movies = [];
@@ -262,7 +318,7 @@ function updateDepth(val, shouldRender = true) {
   state.depth = parseInt(val);
   const labels = ["ピュアな", "リアルな", "アダルトな", "ウェットな", "ヘビーな"];
   document.getElementById("depthLabel").innerText = labels[val - 1];
-  
+   
   const r = 224 - (val - 1) * 12;
   const g = 242 - (val - 1) * 15;
   const b = 247 - (val - 1) * 10;
@@ -331,7 +387,7 @@ function render(){
   const section = document.getElementById("resultsSection");
   const area = document.getElementById("results");
   const tagsArea = document.getElementById("activeTags");
-  
+   
   if (list === null) { section.style.display = "none"; return; }
   section.style.display = "block";
 
@@ -351,7 +407,7 @@ function render(){
     const country = m.Country || "";
     const format = m.Format || "";
     const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
-    
+     
     return `
       <a class="movie" href="detail.html?title=${encodeURIComponent(title)}" style="animation-delay: ${i * 0.1}s">
         <div class="movie-img">
@@ -366,6 +422,12 @@ function render(){
 }
 
 function toggleMenu(){ 
+  const modal = document.getElementById("randomModal");
+  // もしランダムポップアップが開いていたら、先にそれを閉じる
+  if (modal && modal.classList.contains("show")) {
+    closeRandomModal();
+    return;
+  }
   document.getElementById("menu").classList.toggle("open"); 
   document.getElementById("overlay").classList.toggle("show"); 
 }
@@ -383,6 +445,46 @@ function searchMovie(keyword){
     return;
   }
   area.innerHTML = filtered.map(m => `<div style="padding:16px; border-bottom:1px solid #f0f8fa; cursor:pointer; font-size:14px;" onclick="location.href='detail.html?title=${encodeURIComponent(m.Title)}'">${m.Title}</div>`).join("");
+}
+
+/* ===== 【追加】今日の一本（ランダム選出・表示）の処理群 ===== */
+function showRandomMovie() {
+  if (!movies || movies.length === 0) {
+    alert("物語が届くのを待っています。少し時間を置いて再度お試しください。");
+    return;
+  }
+
+  // 先にメニュー自体の「open」クラスを外して閉じる（背景overlayは残すためtoggleMenuは使わない）
+  document.getElementById("menu").classList.remove("open");
+
+  const randomIndex = Math.floor(Math.random() * movies.length);
+  const m = movies[randomIndex];
+
+  const title = m.Title || "";
+  const country = m.Country || "";
+  const format = m.Format || "";
+  const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
+
+  const contentArea = document.getElementById("randomResultContent");
+  contentArea.innerHTML = `
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <div class="movie-img" style="width: 95px; height: 133px; margin: 0 auto 18px; box-shadow: 0 8px 25px rgba(74, 106, 122, 0.15); border-radius: 10px;">
+        <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+      <div class="movie-meta" style="margin-bottom: 6px; font-size: 12px; color: #5a7a8a; opacity: 0.7;">${country} / ${format}</div>
+      <h3 style="margin: 0 0 30px 0; font-size: 19px; font-weight: 500; color: #3a5a6a; line-height: 1.4; max-width: 100%; word-break: break-all;">${title}</h3>
+      <a href="detail.html?title=${encodeURIComponent(title)}" class="clear-btn" style="margin: 0; text-decoration: none; display: inline-block; background: rgba(199, 233, 245, 0.4); border-color: #a0d8ef;">この物語に触れる</a>
+    </div>
+  `;
+
+  // 背景の遮断幕とポップアップを表示
+  document.getElementById("overlay").classList.add("show");
+  document.getElementById("randomModal").classList.add("show");
+}
+
+function closeRandomModal() {
+  document.getElementById("randomModal").classList.remove("show");
+  document.getElementById("overlay").classList.remove("show");
 }
 </script>
 
