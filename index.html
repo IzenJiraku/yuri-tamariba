@@ -340,14 +340,14 @@
 <!-- ランダム表示用モーダル -->
 <div class="random-modal" id="randomModal">
   <div class="random-modal-close" onclick="closeRandomModal()">×</div>
-  <div style="font-size: 11px; color: #8b8175; letter-spacing: 0.15em; margin-bottom: 20px;">本日のあなたへ</div>
+  <div style="font-size: 11px; color: #8b8175; letter-spacing: 0.15em; margin-bottom: 20px;">いまのあなたへ</div>
   <div id="randomResultContent"></div>
 </div>
 
 <!-- 定点観測（スライドショー）エリア -->
 <div class="theater-mode" id="theaterMode">
   <div class="theater-card-wrapper" id="theaterCardWrapper"></div>
-  <button class="theater-close-btn" onclick="stopTheaterMode()">いまの心地に戻る</button>
+  <button class="theater-close-btn" onclick="stopTheaterMode()">たまりばに戻る</button>
 </div>
 
 <script>
@@ -369,7 +369,7 @@ fetch(url).then(r => r.json()).then(d => {
   buildFilterButtons();
   restoreUI();
   render();
-}).catch(e => console.error("データ取得に失敗しました:", e));
+}).catch(e => console.error("データにたどり着けませんでした:", e));
 
 function buildFilterButtons() {
   const countries = new Set();
