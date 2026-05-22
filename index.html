@@ -68,7 +68,6 @@
     .section-sub { font-size: 11px; color: #8b8175; text-align: center; margin-bottom: 25px; display: block; letter-spacing: 0.1em; }
 
     /* ===== GRID & CARDS ===== */
-    /* 拡大時にボタンが切れないよう、gapを15px→20pxへ広げ、パディング分の余白を確保 */
     .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; padding: 4px; }
     @media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); gap:16px; } }
     @media (max-width:400px){ .grid{ grid-template-columns:repeat(2,1fr); } }
@@ -84,27 +83,35 @@
     }
     .card.active{ background: rgba(199, 233, 245, 0.7); border-color: #a0d8ef; color: #3a5a6a; transform: scale(1.05); z-index: 2; }
 
-    /* ネタバレベール用の横長ボタンスタイル */
+    /* 【修正】ネタバレ用：文字主体の洗練されたニュアンスボタン */
     .spoiler-toggle-card {
       grid-column: 1 / -1;
       aspect-ratio: auto !important;
-      border-radius: 30px !important;
-      padding: 14px 20px !important;
-      font-size: 13px !important;
-      letter-spacing: 0.1em;
-      background: rgba(235, 225, 215, 0.4) !important;
-      border: 1px dashed rgba(139, 129, 117, 0.4) !important;
+      border: none !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      border-radius: 0 !important;
       color: #8b8175 !important;
-      margin-top: 5px;
+      font-size: 12px !important;
+      letter-spacing: 0.15em;
+      padding: 10px 0 !important;
+      margin: 15px auto 5px !important;
+      width: fit-content;
+      opacity: 0.7;
+      border-bottom: 1px dashed rgba(139, 129, 117, 0.3) !important;
     }
+    .spoiler-toggle-card:hover {
+      opacity: 1;
+    }
+    /* 開いている時、または中のタグが選択されている時 */
     .spoiler-toggle-card.active {
-      background: rgba(199, 233, 245, 0.4) !important;
-      border: 1px solid #a0d8ef !important;
+      transform: none !important; /* 文字だけなので拡大はオフに */
       color: #3a5a6a !important;
+      border-bottom: 1px solid rgba(160, 216, 239, 0.6) !important;
+      opacity: 1;
     }
 
     /* ===== その他・ネタバレ用アコーディオンエリア ===== */
-    /* 上下の要素と干渉してボタンが切れないよう、gapとpaddingを調整 */
     .other-countries-wrapper, .spoiler-rel-wrapper {
       grid-column: 1 / -1;
       display: grid;
@@ -242,7 +249,7 @@
     }
     .random-modal-close:hover { opacity: 1; }
 
-    /* ===== 定点観測（スライドショー）シアターモード ===== */
+    /* ===== 定点観測 シアターモード ===== */
     .theater-mode {
       position: fixed; inset: 0; z-index: 3000;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -432,8 +439,9 @@ function buildFilterButtons() {
     `<div class="card" data-value="${r}" onclick="toggleFilter('rel','${r}',this)">${r}</div>`
   ).join("");
 
+  /* 【修正】ボタンのラベル文字列を簡潔にし、grid-column全体に広げるのではなく中央の文字リンクのように振る舞わせるためクラスを適応 */
   if (otherRels.length > 0) {
-    relHtml += `<div class="card spoiler-toggle-card" id="spoilerRelToggleBtn" onclick="toggleSpoilerRels()">関係性の詳細・ネタバレを開く</div>`;
+    relHtml += `<div class="card spoiler-toggle-card" id="spoilerRelToggleBtn" onclick="toggleSpoilerRels()">ネタバレかも…？</div>`;
     relHtml += `
       <div class="spoiler-rel-wrapper" id="spoilerRelWrapper">
         ${otherRels.map(r => `<div class="card" data-value="${r}" onclick="toggleFilter('rel','${r}',this)">${r}</div>`).join("")}
@@ -473,6 +481,7 @@ function updateOtherToggleBtnState() {
   }
 }
 
+/* 【修正】開閉時の文言をよりすっきりした表現にリファイン */
 function toggleSpoilerRels(forcedState = null) {
   const wrapper = document.getElementById("spoilerRelWrapper");
   const btn = document.getElementById("spoilerRelToggleBtn");
@@ -483,11 +492,11 @@ function toggleSpoilerRels(forcedState = null) {
   if (isSpoilerRelOpen) {
     wrapper.classList.add("open");
     wrapper.style.maxHeight = wrapper.scrollHeight + "px";
-    btn.innerText = "関係性の詳細・ネタバレを閉じる";
+    btn.innerText = "詳細をたたむ";
   } else {
     wrapper.classList.remove("open");
     wrapper.style.maxHeight = "0";
-    btn.innerText = "関係性の詳細・ネタバレを開く";
+    btn.innerText = "ネタバレかも…？";
   }
   updateSpoilerRelBtnState();
 }
