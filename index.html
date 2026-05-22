@@ -68,8 +68,9 @@
     .section-sub { font-size: 11px; color: #8b8175; text-align: center; margin-bottom: 25px; display: block; letter-spacing: 0.1em; }
 
     /* ===== GRID & CARDS ===== */
-    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:15px; }
-    @media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); gap:12px; } }
+    /* 拡大時にボタンが切れないよう、gapを15px→20pxへ広げ、パディング分の余白を確保 */
+    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; padding: 4px; }
+    @media (max-width:600px){ .grid{ grid-template-columns:repeat(3,1fr); gap:16px; } }
     @media (max-width:400px){ .grid{ grid-template-columns:repeat(2,1fr); } }
 
     .card{
@@ -81,14 +82,35 @@
       backdrop-filter: blur(5px);
       border-radius: 50% 50% 48% 52% / 52% 48% 52% 48%;
     }
-    .card.active{ background: rgba(199, 233, 245, 0.7); border-color: #a0d8ef; color: #3a5a6a; transform: scale(1.05); }
+    .card.active{ background: rgba(199, 233, 245, 0.7); border-color: #a0d8ef; color: #3a5a6a; transform: scale(1.05); z-index: 2; }
 
-    /* ===== その他用アコーディオンエリア ===== */
-    .other-countries-wrapper {
+    /* ネタバレベール用の横長ボタンスタイル */
+    .spoiler-toggle-card {
+      grid-column: 1 / -1;
+      aspect-ratio: auto !important;
+      border-radius: 30px !important;
+      padding: 14px 20px !important;
+      font-size: 13px !important;
+      letter-spacing: 0.1em;
+      background: rgba(235, 225, 215, 0.4) !important;
+      border: 1px dashed rgba(139, 129, 117, 0.4) !important;
+      color: #8b8175 !important;
+      margin-top: 5px;
+    }
+    .spoiler-toggle-card.active {
+      background: rgba(199, 233, 245, 0.4) !important;
+      border: 1px solid #a0d8ef !important;
+      color: #3a5a6a !important;
+    }
+
+    /* ===== その他・ネタバレ用アコーディオンエリア ===== */
+    /* 上下の要素と干渉してボタンが切れないよう、gapとpaddingを調整 */
+    .other-countries-wrapper, .spoiler-rel-wrapper {
       grid-column: 1 / -1;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+      gap: 20px;
+      padding: 4px;
       max-height: 0;
       overflow: hidden;
       opacity: 0;
@@ -102,15 +124,19 @@
                   padding-bottom 0.3s ease;
       will-change: max-height, opacity;
     }
-    .other-countries-wrapper.open {
+    .other-countries-wrapper.open, .spoiler-rel-wrapper.open {
       opacity: 1;
       visibility: visible;
       margin-top: 15px;
       padding-bottom: 15px; 
     }
     
-    @media (max-width:600px){ .other-countries-wrapper{ grid-template-columns:repeat(3,1fr); gap:12px; } }
-    @media (max-width:400px){ .other-countries-wrapper{ grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:600px){ 
+      .other-countries-wrapper, .spoiler-rel-wrapper { grid-template-columns:repeat(3,1fr); gap:16px; } 
+    }
+    @media (max-width:400px){ 
+      .other-countries-wrapper, .spoiler-rel-wrapper { grid-template-columns:repeat(2,1fr); } 
+    }
 
     /* ===== ACTIVE TAGS & CLEAR ===== */
     .active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; justify-content: center; }
@@ -156,7 +182,6 @@
     }
     .menu.open{ left:0; }
     
-    /* 検索窓を細い明朝体に指定 */
     .search{ 
       width:100%; padding:14px 0; border:none; border-bottom:1px solid #d0e8f0; 
       outline: none; font-size: 15px; background: transparent;
@@ -174,7 +199,6 @@
     .no-result-box { padding: 25px 0; font-size: 13px; color: #8b8175; line-height: 1.8; }
     .form-link { color: #4a6a7a; text-decoration: underline; font-weight: 500; }
 
-    /* メニュー内のリンク・ボタンをすべて左揃え・エフェクトなしの明朝体テキストに */
     .menu-link-item, .menu-btn-item {
       display: block; text-align: left; background: none; border: none; padding: 14px 0;
       margin: 0; width: 100%; text-decoration: none; color: #4a6a7a; font-size: 14px;
@@ -182,10 +206,9 @@
       outline: none; -webkit-appearance: none;
     }
     .menu-link-item:hover, .menu-btn-item:hover {
-      color: #2b2b2b; /* ほんの少し文字色が濃くなるだけの上品な変化 */
+      color: #2b2b2b;
     }
 
-    /* 最下部に固定するためのマージン制御 */
     .menu-footer-group {
       margin-top: auto; padding-top: 30px;
     }
@@ -255,7 +278,6 @@
     }
     .theater-close-btn:hover { opacity: 1; background: rgba(255,255,255,0.3); }
 
-    /* 通常UI消去用クラス */
     .ui-hidden { opacity: 0 !important; pointer-events: none !important; transform: translateY(-20px); }
   </style>
 </head>
@@ -275,18 +297,15 @@
 </div>
 
 <div class="menu" id="menu">
-  <!-- 検索窓 -->
   <input class="search" type="text" placeholder="作品名で探す" oninput="searchMovie(this.value)">
   <div id="searchResults"></div>
   
-  <!-- メニューコンテンツ（上部グループ） -->
   <div style="margin-top: 30px;">
     <a href="list.html" class="menu-link-item">作品一覧を見てみる</a>
     <button class="menu-btn-item" onclick="showRandomMovie()">偶然の出会いに委ねる</button>
     <button class="menu-btn-item" onclick="startTheaterMode()">スライドショー</button>
   </div>
 
-  <!-- メニューコンテンツ（最下部グループ） -->
   <div class="menu-footer-group">
     <a href="about.html" class="menu-link-item" style="opacity: 0.8;">たまりばについて</a>
   </div>
@@ -337,14 +356,12 @@
   </div>
 </div>
 
-<!-- ランダム表示用モーダル -->
 <div class="random-modal" id="randomModal">
   <div class="random-modal-close" onclick="closeRandomModal()">×</div>
   <div style="font-size: 11px; color: #8b8175; letter-spacing: 0.15em; margin-bottom: 20px;">いまのあなたへ</div>
   <div id="randomResultContent"></div>
 </div>
 
-<!-- 定点観測（スライドショー）エリア -->
 <div class="theater-mode" id="theaterMode">
   <div class="theater-card-wrapper" id="theaterCardWrapper"></div>
   <button class="theater-close-btn" onclick="stopTheaterMode()">ホームに戻る</button>
@@ -362,6 +379,7 @@ if (typeof state.country === 'string') {
 }
 
 let isOtherCountriesOpen = false;
+let isSpoilerRelOpen = false; 
 let theaterInterval = null; 
 
 fetch(url).then(r => r.json()).then(d => {
@@ -407,9 +425,22 @@ function buildFilterButtons() {
     `<div class="card" data-value="${f}" onclick="toggleFilter('format','${f}',this)">${f}</div>`
   ).join("");
 
-  document.getElementById("relGrid").innerHTML = Array.from(relationships).map(r => 
+  const topRels = ["恋愛", "友愛", "連帯"];
+  const otherRels = Array.from(relationships).filter(r => !topRels.includes(r));
+
+  let relHtml = topRels.map(r => 
     `<div class="card" data-value="${r}" onclick="toggleFilter('rel','${r}',this)">${r}</div>`
   ).join("");
+
+  if (otherRels.length > 0) {
+    relHtml += `<div class="card spoiler-toggle-card" id="spoilerRelToggleBtn" onclick="toggleSpoilerRels()">関係性の詳細・ネタバレを開く</div>`;
+    relHtml += `
+      <div class="spoiler-rel-wrapper" id="spoilerRelWrapper">
+        ${otherRels.map(r => `<div class="card" data-value="${r}" onclick="toggleFilter('rel','${r}',this)">${r}</div>`).join("")}
+      </div>
+    `;
+  }
+  document.getElementById("relGrid").innerHTML = relHtml;
 }
 
 function toggleOtherCountries(forcedState = null) {
@@ -442,6 +473,38 @@ function updateOtherToggleBtnState() {
   }
 }
 
+function toggleSpoilerRels(forcedState = null) {
+  const wrapper = document.getElementById("spoilerRelWrapper");
+  const btn = document.getElementById("spoilerRelToggleBtn");
+  if (!wrapper || !btn) return;
+
+  isSpoilerRelOpen = forcedState !== null ? forcedState : !isSpoilerRelOpen;
+
+  if (isSpoilerRelOpen) {
+    wrapper.classList.add("open");
+    wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+    btn.innerText = "関係性の詳細・ネタバレを閉じる";
+  } else {
+    wrapper.classList.remove("open");
+    wrapper.style.maxHeight = "0";
+    btn.innerText = "関係性の詳細・ネタバレを開く";
+  }
+  updateSpoilerRelBtnState();
+}
+
+function updateSpoilerRelBtnState() {
+  const wrapper = document.getElementById("spoilerRelWrapper");
+  const btn = document.getElementById("spoilerRelToggleBtn");
+  if (!wrapper || !btn) return;
+
+  const hasActiveChild = wrapper.querySelector(".card.active") !== null;
+  if (hasActiveChild) {
+    btn.classList.add("active");
+  } else {
+    btn.classList.remove("active");
+  }
+}
+
 function saveState() {
   localStorage.setItem('yuri_state', JSON.stringify(state));
 }
@@ -468,10 +531,24 @@ function restoreUI() {
     const el = document.querySelector(`#formatGrid .card[data-value="${val}"]`);
     if(el) el.classList.add("active");
   });
+
+  let shouldOpenSpoiler = false;
   state.rel.forEach(val => {
     const el = document.querySelector(`#relGrid .card[data-value="${val}"]`);
-    if(el) el.classList.add("active");
+    if(el) {
+      el.classList.add("active");
+      const wrapper = document.getElementById("spoilerRelWrapper");
+      if (wrapper && wrapper.contains(el)) {
+        shouldOpenSpoiler = true;
+      }
+    }
   });
+  if (shouldOpenSpoiler) {
+    toggleSpoilerRels(true);
+  } else {
+    updateSpoilerRelBtnState();
+  }
+
   document.getElementById("depthSlider").value = state.depth;
   updateDepth(state.depth, false);
 }
@@ -487,7 +564,7 @@ function updateDepth(val, shouldRender = true) {
   state.depth = parseInt(val);
   const labels = ["ピュアな", "リアルな", "アダルトな", "ウェットな", "ヘビーな"];
   document.getElementById("depthLabel").innerText = labels[val - 1];
-   
+     
   changeBackgroundColorByDepth(state.depth);
 
   if(shouldRender) {
@@ -519,6 +596,15 @@ function toggleFilter(type, val, el){
   if(state[type].includes(val)) state[type] = state[type].filter(x => x !== val);
   else state[type].push(val);
   if(el) el.classList.toggle("active");
+
+  if (type === 'rel') {
+    const wrapper = document.getElementById("spoilerRelWrapper");
+    if (wrapper && isSpoilerRelOpen) {
+      wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+    }
+    updateSpoilerRelBtnState();
+  }
+
   saveState();
   render();
 }
@@ -538,6 +624,16 @@ function removeTag(type, val) {
         wrapper.style.maxHeight = wrapper.scrollHeight + "px";
       }
     }
+  } else if (type === 'rel') {
+    state.rel = state.rel.filter(x => x !== val);
+    const el = document.querySelector(`#relGrid .card[data-value="${val}"]`);
+    if(el) el.classList.remove("active");
+
+    const wrapper = document.getElementById("spoilerRelWrapper");
+    if (wrapper && !wrapper.querySelector(".card.active")) {
+      if (isSpoilerRelOpen) wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+    }
+    updateSpoilerRelBtnState();
   } else {
     state[type] = state[type].filter(x => x !== val);
     const el = document.querySelector(`#${type}Grid .card[data-value="${val}"]`);
@@ -551,6 +647,7 @@ function clearFilters() {
   state = { country: [], format: [], rel: [], depth: 1 };
   document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
   toggleOtherCountries(false);
+  toggleSpoilerRels(false);
   document.getElementById("depthSlider").value = 1;
   updateDepth(1, false);
   saveState();
