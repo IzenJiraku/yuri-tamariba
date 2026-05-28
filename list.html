@@ -35,7 +35,7 @@ body{
 /* ===== TOPBAR ===== */
 .topbar{
   position:fixed; top:0; left:0; width:100%;
-  display:flex; align-items:center; justify-content:space-between; /* 左右両端にきれいに分散配置 */
+  display:flex; align-items:center; justify-content:space-between;
   padding:15px 25px; background:rgba(255, 255, 255, 0.3);
   backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
@@ -69,14 +69,21 @@ body{
 }
 
 /* ===== COUNTRY BLOCK ===== */
-.country-section { margin-bottom: 50px; animation: fadeInUp 1.5s ease backwards; }
+.country-section { margin-bottom: 30px; animation: fadeInUp 1.5s ease backwards; }
 .country-title {
   font-size: 18px; font-weight: 500; color: #3a5a6a; margin-bottom: 15px; padding-bottom: 5px;
   border-bottom: 1px dashed rgba(74, 106, 122, 0.3); letter-spacing: 0.1em;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none;
 }
+.country-title:hover { opacity: 0.7; }
+.country-title::after { content: '▼'; font-size: 12px; color: #5a7a8a; transition: transform 0.3s; }
+.country-section.open .country-title::after { transform: rotate(180deg); }
 
 /* ===== LIST ===== */
 .results{ display:grid; gap:18px; }
+.country-section .results { display: none; }
+.country-section.open .results { display: grid; }
+
 .movie{
   background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px; padding:20px; display: flex; gap: 20px; align-items: center;
@@ -86,23 +93,15 @@ body{
 .movie:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
 .movie-img{ width: 75px; height: 105px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f8fa; }
 .movie-img img{ width: 100%; height: 100%; object-fit: cover; }
-.movie-content { flex-grow: 1; min-width: 0; } /* 横幅が狭いときに文字がはみ出るのを防ぐ設定 */
+.movie-content { flex-grow: 1; min-width: 0; }
 .movie-content h3 { margin: 4px 0 6px; font-size: 18px; font-weight: 500; color: #3a5a6a; line-height: 1.4; }
 .movie-meta { font-size: 12px; color: #5a7a8a; opacity: 0.7; }
 
-/* ===== 【追加】カード内タグ用の装飾 ===== */
+/* カード内タグ用の装飾 */
 .movie-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.mini-tag {
-  font-size: 11px; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.05em; line-height: 1.4;
-}
-/* 関係性タグ（落ち着いた青磁色系） */
-.mini-tag.rel {
-  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(160, 216, 239, 0.5); color: #4a6a7a;
-}
-/* 心地・沈み具合タグ（ほんのり温かみのあるセピア・ベージュ系） */
-.mini-tag.mood {
-  background: rgba(245, 238, 230, 0.6); border: 1px solid rgba(139, 129, 117, 0.25); color: #7a6e60;
-}
+.mini-tag { font-size: 11px; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.05em; line-height: 1.4; }
+.mini-tag.rel { background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(160, 216, 239, 0.5); color: #4a6a7a; }
+.mini-tag.mood { background: rgba(245, 238, 230, 0.6); border: 1px solid rgba(139, 129, 117, 0.25); color: #7a6e60; }
 
 #loading { text-align: center; padding: 100px; font-size: 14px; color: #4a6a7a; letter-spacing: 0.2em; }
 
@@ -122,9 +121,7 @@ body{
 </div>
 
 <div class="topbar">
-  <!-- 左側：ブラウザバックの挙動で確実に直前（ホーム）へ戻る -->
   <a href="#" class="back-btn" onclick="history.back(); return false;">← 戻る</a>
-  <!-- 右側：ホームロゴ -->
   <a href="index.html" class="logo">百合のたまりば</a>
 </div>
 
@@ -132,10 +129,9 @@ body{
   <h1 class="page-title">作品一覧</h1>
   <div id="counter"></div>
   
-  <!-- ソート切り替えボタン -->
   <div class="sort-switch">
-    <button id="btnName" class="sort-btn active" onclick="changeSort('name')">50音順</button>
-    <button id="btnYear" class="sort-btn" onclick="changeSort('year')">年代順 (古い順)</button>
+    <button id="btnName" class="sort-btn active" onclick="changeSort('name')">50音</button>
+    <button id="btnYear" class="sort-btn" onclick="changeSort('year')">国</button>
   </div>
 
   <div id="contentArea">
@@ -146,9 +142,9 @@ body{
 <script>
 const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
 let allMovies = [];
-
 let currentSort = localStorage.getItem('list_sort_type') || "name";
 
+// 背景色の読み込み
 const savedState = JSON.parse(localStorage.getItem('yuri_state'));
 if (savedState && savedState.depth) {
   const val = savedState.depth;
@@ -158,6 +154,7 @@ if (savedState && savedState.depth) {
   document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 }
 
+// データ読み込み
 fetch(url)
   .then(r => r.json())
   .then(data => {
@@ -183,31 +180,110 @@ function changeSort(type) {
   renderCountryGroupList();
 }
 
+// 【原点回帰】スプレッドシートの「Kana」に書かれたひらがなを、寸分の狂いもなく正しい50音の「行」に完璧に仕分ける関数
+function getGyo(kanaStr) {
+  if (!kanaStr) return "その他";
+  
+  // 文字列の先頭から空白を除いた1文字目を取得
+  const firstChar = kanaStr.trim().charAt(0);
+  
+  // アルファベット（A-Z）から始まる場合は大文字のグループへ
+  if (/[a-zA-Z]/.test(firstChar)) {
+    return firstChar.toUpperCase() + "";
+  }
+  
+  // カタカナで入力されても自動でひらがなに変換して判定
+  const hira = firstChar.replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60));
+  const code = hira.charCodeAt(0);
+  
+  // ひらがなの文字コードによる、絶対にブレない50音判定（濁点・小文字も各行に完全内包）
+  if (code >= 0x3041 && code <= 0x304a) return "ア"; // あぃあぅお
+  if (code >= 0x304b && code <= 0x3054) return "カ"; // かがくぐこご
+  if (code >= 0x3055 && code <= 0x305e) return "サ"; // さざすずそぞ
+  if (code >= 0x305f && code <= 0x3069) return "タ"; // ただっづとど
+  if (code >= 0x306a && code <= 0x306f) return "ナ"; // なにぬねの
+  if (code >= 0x3070 && code <= 0x307e) return "ハ"; // はばぱふぶぷほぼぽ
+  if (code >= 0x307f && code <= 0x3082) return "マ"; // まみむめも
+  if (code >= 0x3083 && code <= 0x3088) return "ヤ"; // やゃゆゅよょ
+  if (code >= 0x3089 && code <= 0x3093) return "ラ"; // らりるれろ
+  if (hira === 'わ' || hira === 'を' || hira === 'ん' || code === 0x3094) return "ワ";
+  
+  return "その他";
+}
+
+function toggleSection(element) {
+  const section = element.parentElement;
+  section.classList.toggle('open');
+}
+
 function renderCountryGroupList() {
   document.getElementById('counter').innerText = `全 ${allMovies.length} 作品`;
   const area = document.getElementById('contentArea');
-  const countryOrder = ["日本", "韓国", "タイ", "台湾", "中国", "アメリカ", "フランス", "イタリア"];
   
-  const groups = {};
-  allMovies.forEach(m => {
-    const country = m.Country || "その他";
-    if (!groups[country]) groups[country] = [];
-    groups[country].push(m);
-  });
+  let groups = {};
+  let groupOrder = [];
 
-  const sortedCountries = Object.keys(groups).sort((a, b) => {
-    let idxA = countryOrder.indexOf(a);
-    let idxB = countryOrder.indexOf(b);
-    if (idxA === -1) idxA = 999;
-    if (idxB === -1) idxB = 999;
-    return idxA - idxB;
-  });
+  if (currentSort === "name") {
+    // 50音の基本定義
+    groupOrder = ["ア", "カ", "サ", "タ", "ナ", "ハ", "マ", "ヤ", "ラ", "ワ"];
+    
+    allMovies.forEach(m => {
+      // 新設した「Kana」列のデータを最優先で評価
+      const searchKey = m.Kana || "";
+      const gyo = getGyo(searchKey);
+      if (!groups[gyo]) groups[gyo] = [];
+      groups[gyo].push(m);
+    });
+
+    // アルファベットなどの定義外グループ
+    let extraGroups = [];
+    Object.keys(groups).forEach(g => {
+      if (!groupOrder.includes(g) && g !== "その他") {
+        extraGroups.push(g);
+      }
+    });
+    extraGroups.sort((a, b) => a.localeCompare(b, 'en'));
+    groupOrder = groupOrder.concat(extraGroups);
+
+    if (groups["その他"]) {
+      groupOrder.push("その他");
+    }
+
+  } else if (currentSort === "year") {
+    // 国別グループ化
+    groupOrder = ["日本", "韓国", "タイ", "台湾", "中国", "アメリカ", "フランス", "イタリア"];
+    
+    allMovies.forEach(m => {
+      const country = m.Country || "その他";
+      if (!groups[country]) groups[country] = [];
+      groups[country].push(m);
+    });
+
+    let extraCountries = [];
+    Object.keys(groups).forEach(g => {
+      if (!groupOrder.includes(g) && g !== "その他") {
+        extraCountries.push(g);
+      }
+    });
+    groupOrder = groupOrder.concat(extraCountries);
+
+    if (groups["Contrast"] || groups["その他"]) {
+      groupOrder.push("その他");
+    }
+  }
 
   let html = "";
-  sortedCountries.forEach(country => {
-    const list = groups[country];
+  groupOrder.forEach(groupName => {
+    const list = groups[groupName];
+    if (!list || list.length === 0) return;
+
+    // 各グループ内での最終ソート
     if (currentSort === "name") {
-      list.sort((a, b) => (a.Title || "").localeCompare(b.Title || "", 'ja'));
+      list.sort((a, b) => {
+        const titleA = a.Kana || a.Title || "";
+        const titleB = b.Kana || b.Title || "";
+        return titleA.localeCompare(titleB, 'ja');
+      });
     } else if (currentSort === "year") {
       list.sort((a, b) => {
         const yearA = a.Year ? parseInt(a.Year) : 9999;
@@ -218,10 +294,9 @@ function renderCountryGroupList() {
     
     html += `
       <div class="country-section">
-        <h2 class="country-title">${country} (${list.length})</h2>
+        <h2 class="country-title" onclick="toggleSection(this)">${groupName} (${list.length})</h2>
         <div class="results">
           ${list.map(m => {
-            // 【変更】関係性（Relationship）と心地（Mood）をタグに変換するロジック
             let tagsHtml = "";
             
             if (m.Relationship) {
@@ -242,9 +317,8 @@ function renderCountryGroupList() {
                   <img src="${m.Image || ''}" onerror="this.style.opacity='0'">
                 </div>
                 <div class="movie-content">
-                  <div class="movie-meta">${m.Year || '----'} / ${m.Format || '---'}</div>
+                  <div class="movie-meta">${m.Year || '----'} / ${m.Format || '---'} ${m.Country ? ' / ' + m.Country : ''}</div>
                   <h3>${m.Title}</h3>
-                  <!-- 【追加】生成したタグの配置スペース -->
                   <div class="movie-tags">
                     ${tagsHtml}
                   </div>
