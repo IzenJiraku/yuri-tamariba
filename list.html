@@ -180,37 +180,44 @@ function changeSort(type) {
   renderCountryGroupList();
 }
 
-// 【原点回帰】スプレッドシートの「Kana」に書かれたひらがなを、寸分の狂いもなく正しい50音の「行」に完璧に仕分ける関数
 function getGyo(kanaStr) {
   if (!kanaStr) return "その他";
-  
-  // 文字列の先頭から空白を除いた1文字目を取得
+
   const firstChar = kanaStr.trim().charAt(0);
-  
-  // アルファベット（A-Z）から始まる場合は大文字のグループへ
-  if (/[a-zA-Z]/.test(firstChar)) {
-    return firstChar.toUpperCase() + "";
+  if (!firstChar) return "その他";
+
+  // 英字はアルファベットごとに分類
+  if (/[A-Za-z]/.test(firstChar)) {
+    return firstChar.toUpperCase();
   }
-  
-  // カタカナで入力されても自動でひらがなに変換して判定
-  const hira = firstChar.replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60));
-  const code = hira.charCodeAt(0);
-  
-  // ひらがなの文字コードによる、絶対にブレない50音判定（濁点・小文字も各行に完全内包）
-  if (code >= 0x3041 && code <= 0x304a) return "ア"; // あぃあぅお
-  if (code >= 0x304b && code <= 0x3054) return "カ"; // かがくぐこご
-  if (code >= 0x3055 && code <= 0x305e) return "サ"; // さざすずそぞ
-  if (code >= 0x305f && code <= 0x3069) return "タ"; // ただっづとど
-  if (code >= 0x306a && code <= 0x306f) return "ナ"; // なにぬねの
-  if (code >= 0x3070 && code <= 0x307e) return "ハ"; // はばぱふぶぷほぼぽ
-  if (code >= 0x307f && code <= 0x3082) return "マ"; // まみむめも
-  if (code >= 0x3083 && code <= 0x3088) return "ヤ"; // やゃゆゅよょ
-  if (code >= 0x3089 && code <= 0x3093) return "ラ"; // らりるれろ
-  if (hira === 'わ' || hira === 'を' || hira === 'ん' || code === 0x3094) return "ワ";
-  
+
+  // カタカナ→ひらがな変換
+  const hira = firstChar.replace(
+    /[\u30a1-\u30f6]/g,
+    c => String.fromCharCode(c.charCodeAt(0) - 0x60)
+  );
+
+  const groups = {
+    "ア": ["あ","い","う","え","お","ぁ","ぃ","ぅ","ぇ","ぉ"],
+    "カ": ["か","き","く","け","こ","が","ぎ","ぐ","げ","ご"],
+    "サ": ["さ","し","す","せ","そ","ざ","じ","ず","ぜ","ぞ"],
+    "タ": ["た","ち","つ","て","と","だ","ぢ","づ","で","ど"],
+    "ナ": ["な","に","ぬ","ね","の"],
+    "ハ": ["は","ひ","ふ","へ","ほ","ば","び","ぶ","べ","ぼ","ぱ","ぴ","ぷ","ぺ","ぽ"],
+    "マ": ["ま","み","む","め","も"],
+    "ヤ": ["や","ゆ","よ","ゃ","ゅ","ょ"],
+    "ラ": ["ら","り","る","れ","ろ"],
+    "ワ": ["わ","を","ん","ゔ"]
+  };
+
+  for (const [gyo, chars] of Object.entries(groups)) {
+    if (chars.includes(hira)) {
+      return gyo;
+    }
+  }
+
   return "その他";
 }
-
 function toggleSection(element) {
   const section = element.parentElement;
   section.classList.toggle('open');
