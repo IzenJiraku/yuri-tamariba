@@ -442,7 +442,7 @@ function buildFilterButtons() {
   ).join("");
 
   if (otherCountries.length > 0) {
-    countryHtml += `<div class="card spoiler-toggle-card" id="otherToggleBtn" onclick="toggleOtherCountries()">その他…？</div>`;
+    countryHtml += `<div class="card spoiler-toggle-card" id="otherToggleBtn" onclick="toggleOtherCountries()">その他</div>`;
     countryHtml += `
       <div class="other-countries-wrapper" id="otherCountriesWrapper">
         ${otherCountries.map(c => `<div class="card" data-value="${c}" onclick="toggleCountryFilter('${c}',this)">${c}</div>`).join("")}
