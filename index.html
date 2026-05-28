@@ -846,15 +846,23 @@ function nextTheaterSlide() {
     if (m.Mood) m.Mood.split(/[,、]/).forEach(mood => { if(mood.trim()) tagsArr.push(mood.trim()); });
 
     wrapper.innerHTML = `
-      <div class="theater-img">
-        <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
-      </div>
-      <div class="theater-meta">${country} / ${format}</div>
-      <h2 class="theater-title">${title}</h2>
-      <div class="theater-tags">
-        ${tagsArr.map(t => `<span class="theater-tag-item">${t}</span>`).join("")}
-      </div>
-    `;
+  <a href="detail.html?title=${encodeURIComponent(title)}"
+     style="display:block;text-decoration:none;color:inherit;">
+
+    <div class="theater-img">
+      <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
+    </div>
+
+    <div class="theater-meta">${country} / ${format}</div>
+
+    <h2 class="theater-title">${title}</h2>
+
+    <div class="theater-tags">
+      ${tagsArr.map(t => `<span class="theater-tag-item">${t}</span>`).join("")}
+    </div>
+
+  </a>
+`;
     wrapper.classList.add("visible");
   }, 400);
 }
