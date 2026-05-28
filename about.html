@@ -61,7 +61,22 @@ body{
 }
 
 .about-title {
-  font-size: 22px; font-weight: 300; color: #3a5a6a; letter-spacing: 0.2em; margin-bottom: 40px;
+  font-size: 22px; font-weight: 300; color: #3a5a6a; letter-spacing: 0.2em; margin-bottom: 25px;
+}
+
+/* 追加：ロゴ画像のスタイル */
+.about-logo-container {
+  margin-bottom: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.about-logo-img {
+  height: 120px; /* 紹介ページ用に少し小ぶりに調整 */
+  width: auto;
+  object-fit: contain;
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 .about-text {
@@ -100,6 +115,7 @@ body{
   .container { padding-top: 110px; }
   .logo { font-size: 15px; letter-spacing: 0.2em; }
   .about-text { font-size: 14px; }
+  .about-logo-img { height: 100px; } /* スマホ向けに少し縮小 */
 }
 </style>
 </head>
@@ -121,6 +137,11 @@ body{
 <div class="container">
   <div class="about-card">
     <h1 class="about-title">たまりばについて</h1>
+    
+    <!-- 追加：ロゴ画像エリア -->
+    <div class="about-logo-container">
+      <img src="logo.png" alt="百合のたまりば ロゴ" class="about-logo-img">
+    </div>
     
     <div class="about-text">
       <p>世の中にある「女性同士の特別な関係性・感情が描かれている作品」を、その時々の気分に合わせて見つけられるように作った小さな記録庫（たまりば）です。</p>
