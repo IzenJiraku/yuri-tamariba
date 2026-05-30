@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>本棚 | 百合のたまりば</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&display=swap');
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background: #e0f2f7; 
+  color:#2b2b2b;
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  overflow-x: hidden;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+
+/* 背景装飾 */
+.bg-decor {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1; pointer-events: none;
+}
+.bg-circle {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  filter: blur(50px);
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed; top:0; left:0; width:100%;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 25px; background:rgba(255, 255, 255, 0.3);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
+}
+.back-btn {
+  text-decoration: none; color: #4a6a7a; font-size: 14px; letter-spacing: 0.1em;
+  display: flex; align-items: center; transition: 0.3s;
+}
+.back-btn:hover { opacity: 0.6; transform: translateX(-5px); }
+
+.logo{ font-size:18px; letter-spacing:0.3em; font-weight: 500; color: #4a6a7a; text-shadow: 0 0 10px rgba(255,255,255,0.5); text-decoration: none; }
+
+/* ===== LAYOUT ===== */
+.container{ max-width:900px; margin:auto; padding:140px 20px 80px; animation: fadeIn 1s ease; }
+
+.page-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: #3a5a6a;
+  letter-spacing: 0.2em;
+  margin-bottom: 40px;
+  text-align: center;
+  position: relative;
+}
+.page-title::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: #3a5a6a;
+  margin: 15px auto 0;
+  opacity: 0.5;
+}
+
+/* 本棚のグリッド配置 */
+.bookshelf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+/* 作品カード */
+.book-card {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-decoration: none;
+  color: inherit;
+}
+.book-card:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(121, 197, 228, 0.15);
+  border-color: rgba(121, 197, 228, 0.4);
+}
+
+.book-visual {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  background: #fff;
+}
+.book-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.book-card:hover .book-visual img {
+  transform: scale(1.04);
+}
+
+.book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1; /* タイトルとボタンを縦方向に綺麗に分散配置するための土台 */
+}
+.book-meta {
+  font-size: 11px;
+  color: #6a8a9a;
+  letter-spacing: 0.05em;
+}
+.book-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #3a5a6a;
+  margin: 0 0 10px 0; /* 下に少しマージンをあけてボタンとの距離を保つ */
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 本棚から戻すボタン（完全にカード内部の下部に固定） */
+.remove-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  color: #8aabaa;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 5px 0;
+  margin-top: auto; /* これにより、タイトルが短くても長くても、常に一番下に押し下げられます */
+  transition: color 0.3s;
+  position: relative;
+  z-index: 10;
+}
+.remove-btn:hover {
+  color: #d98888;
+}
+
+/* 本棚が空のときのメッセージ */
+.empty-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 100px 20px;
+  font-size: 14px;
+  color: #5a7a8a;
+  letter-spacing: 0.15em;
+  line-height: 2;
+}
+
+#loading { grid-column: 1 / -1; text-align: center; padding: 100px; font-size: 14px; color: #4a6a7a; letter-spacing: 0.2em; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+
+<body>
+
+<div class="bg-decor">
+  <div class="bg-circle" style="width: 60vw; height: 60vw; top: -20vw; right: -10vw;"></div>
+  <div class="bg-circle" style="width: 40vw; height: 40vw; bottom: -10vw; left: -10vw; opacity: 0.6;"></div>
+</div>
+
+<div class="topbar">
+  <a href="index.html" class="back-btn">← たまりばへ戻る</a>
+  <a href="index.html" class="logo">百合のたまりば</a>
+</div>
+
+<div class="container">
+  <h1 class="page-title">本棚</h1>
+  
+  <div class="bookshelf-grid" id="bookshelfArea">
+    <div id="loading">本棚を開いています...</div>
+  </div>
+</div>
+
+<script>
+const url = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/百合作品リスト";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const bookshelf = JSON.parse(localStorage.getItem('yuri_bookshelf')) || [];
+  const area = document.getElementById('bookshelfArea');
+
+  if (bookshelf.length === 0) {
+    area.innerHTML = '<div class="empty-message">まだ本棚になにも置かれていないみたい。<br>お気に入りの作品を並べてみてください。</div>';
+    return;
+  }
+
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      const myBooks = data.filter(m => bookshelf.includes(m.Title));
+      
+      if (myBooks.length > 0) {
+        renderBookshelf(myBooks);
+      } else {
+        area.innerHTML = '<div class="empty-message">置かれていた本が見つかりませんでした。</div>';
+      }
+    })
+    .catch(e => {
+      area.innerHTML = '<div id="loading">データの読み込みに失敗しました。</div>';
+    });
+});
+
+function renderBookshelf(books) {
+  const area = document.getElementById('bookshelfArea');
+  
+  area.innerHTML = books.map(m => {
+    return `
+      <!-- 1本のカードとしてまとまった美しいAタグ構造に変更 -->
+      <a href="detail.html?title=${encodeURIComponent(m.Title)}" class="book-card">
+        <div class="book-visual">
+          <img src="${m.Image || ''}" alt="${m.Title}" onerror="this.src='https://placehold.jp/24/d0e8f0/4a6a7a/240x320.png?text=No+Image'">
+        </div>
+        <div class="book-info">
+          <div class="book-meta">${m.Year || '----'} / ${m.Format || '---'}</div>
+          <h2 class="book-title">${m.Title}</h2>
+          
+          <!-- ボタンを内部の最下部に配置。margin-top: autoの効果で美しく整列します -->
+          <button type="button" class="remove-btn" onclick="removeFromBookshelf(event, '${encodeURIComponent(m.Title)}')">
+            本棚からはずす
+          </button>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+
+function removeFromBookshelf(event, encodedTitle) {
+  // 詳細ページへの遷移（リンクイベント）を完全にストップする
+  event.preventDefault();
+  event.stopPropagation();
+
+  const title = decodeURIComponent(encodedTitle);
+  let bookshelf = JSON.parse(localStorage.getItem('yuri_bookshelf')) || [];
+  
+  bookshelf = bookshelf.filter(t => t !== title);
+  localStorage.setItem('yuri_bookshelf', JSON.stringify(bookshelf));
+
+  location.reload();
+}
+</script>
+
+</body>
+</html>
