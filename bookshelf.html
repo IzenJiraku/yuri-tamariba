@@ -69,10 +69,10 @@ body{
   opacity: 0.5;
 }
 
-/* 本棚のグリッド配置 */
+/* 本棚のグリッド配置（作品一覧と統一感が出るように最小幅を設定） */
 .bookshelf-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 30px;
 }
 
@@ -139,7 +139,7 @@ body{
   overflow: hidden;
 }
 
-/* 本棚から戻すボタン（完全にカード内部の下部に固定） */
+/* 本棚から戻すボタン */
 .remove-btn {
   align-self: flex-start;
   background: transparent;
@@ -173,6 +173,41 @@ body{
 #loading { grid-column: 1 / -1; text-align: center; padding: 100px; font-size: 14px; color: #4a6a7a; letter-spacing: 0.2em; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== スマートフォン用レスポンシブ調整 ===== */
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 100px 15px 60px; /* 上下の余白を少し詰める */
+  }
+  .page-title {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  /* スマホの画面幅に合わせて2列で綺麗に収まるように自動調整 */
+  .bookshelf-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px; /* カード同士の間隔を少し狭めて見やすく */
+  }
+  .book-card {
+    padding: 12px; /* 内側の余白をコンパクトに */
+    border-radius: 16px;
+    gap: 10px;
+  }
+  .book-visual {
+    border-radius: 10px;
+  }
+  .book-title {
+    font-size: 13px; /* 小さめの画面でも文字が溢れないサイズ感 */
+    margin: 0 0 5px 0;
+  }
+  .book-meta {
+    font-size: 10px;
+  }
+  .remove-btn {
+    font-size: 10px;
+    padding: 3px 0;
+  }
+}
 </style>
 </head>
 
@@ -227,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function renderBookshelf(books) {
   const area = document.getElementById('bookshelfArea');
   
-  // mapの引数にindexを追加し、何番目の要素かを特定できるように変更
   area.innerHTML = books.map((m, index) => {
     return `
       <a href="detail.html?title=${encodeURIComponent(m.Title)}" class="book-card">
@@ -248,22 +282,16 @@ function renderBookshelf(books) {
 }
 
 function removeFromBookshelf(event, index) {
-  // 詳細ページへの遷移（リンクイベント）を完全にストップする
   event.preventDefault();
   event.stopPropagation();
 
-  // ローカルストレージから最新の本棚リストを取得
   let bookshelf = JSON.parse(localStorage.getItem('yuri_bookshelf')) || [];
   
-  // 安全に指定されたインデックス番号の要素を1件だけ削除
   if (index >= 0 && index < bookshelf.length) {
     bookshelf.splice(index, 1);
   }
   
-  // 更新されたリストをローカルストレージに再度保存
   localStorage.setItem('yuri_bookshelf', JSON.stringify(bookshelf));
-
-  // 画面をリロードして本棚の表示を更新
   location.reload();
 }
 </script>
