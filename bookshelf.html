@@ -120,7 +120,7 @@ body{
   display: flex;
   flex-direction: column;
   gap: 6px;
-  flex-grow: 1; /* タイトルとボタンを縦方向に綺麗に分散配置するための土台 */
+  flex-grow: 1;
 }
 .book-meta {
   font-size: 11px;
@@ -131,7 +131,7 @@ body{
   font-size: 16px;
   font-weight: 500;
   color: #3a5a6a;
-  margin: 0 0 10px 0; /* 下に少しマージンをあけてボタンとの距離を保つ */
+  margin: 0 0 10px 0;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -150,7 +150,7 @@ body{
   letter-spacing: 0.05em;
   cursor: pointer;
   padding: 5px 0;
-  margin-top: auto; /* これにより、タイトルが短くても長くても、常に一番下に押し下げられます */
+  margin-top: auto;
   transition: color 0.3s;
   position: relative;
   z-index: 10;
@@ -227,9 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function renderBookshelf(books) {
   const area = document.getElementById('bookshelfArea');
   
-  area.innerHTML = books.map(m => {
+  // mapの引数にindexを追加し、何番目の要素かを特定できるように変更
+  area.innerHTML = books.map((m, index) => {
     return `
-      <!-- 1本のカードとしてまとまった美しいAタグ構造に変更 -->
       <a href="detail.html?title=${encodeURIComponent(m.Title)}" class="book-card">
         <div class="book-visual">
           <img src="${m.Image || ''}" alt="${m.Title}" onerror="this.src='https://placehold.jp/24/d0e8f0/4a6a7a/240x320.png?text=No+Image'">
@@ -238,8 +238,7 @@ function renderBookshelf(books) {
           <div class="book-meta">${m.Year || '----'} / ${m.Format || '---'}</div>
           <h2 class="book-title">${m.Title}</h2>
           
-          <!-- ボタンを内部の最下部に配置。margin-top: autoの効果で美しく整列します -->
-          <button type="button" class="remove-btn" onclick="removeFromBookshelf(event, '${encodeURIComponent(m.Title)}')">
+          <button type="button" class="remove-btn" onclick="removeFromBookshelf(event, ${index})">
             本棚からはずす
           </button>
         </div>
@@ -248,17 +247,23 @@ function renderBookshelf(books) {
   }).join('');
 }
 
-function removeFromBookshelf(event, encodedTitle) {
+function removeFromBookshelf(event, index) {
   // 詳細ページへの遷移（リンクイベント）を完全にストップする
   event.preventDefault();
   event.stopPropagation();
 
-  const title = decodeURIComponent(encodedTitle);
+  // ローカルストレージから最新の本棚リストを取得
   let bookshelf = JSON.parse(localStorage.getItem('yuri_bookshelf')) || [];
   
-  bookshelf = bookshelf.filter(t => t !== title);
+  // 安全に指定されたインデックス番号の要素を1件だけ削除
+  if (index >= 0 && index < bookshelf.length) {
+    bookshelf.splice(index, 1);
+  }
+  
+  // 更新されたリストをローカルストレージに再度保存
   localStorage.setItem('yuri_bookshelf', JSON.stringify(bookshelf));
 
+  // 画面をリロードして本棚の表示を更新
   location.reload();
 }
 </script>
