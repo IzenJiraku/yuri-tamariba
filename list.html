@@ -159,7 +159,9 @@ fetch(url)
   .then(r => r.json())
   .then(data => {
     if (data && data.length > 0) {
-      allMovies = data;
+      allMovies = data.filter(m =>
+  String(m.公開).toLowerCase() === "true"
+);
       document.getElementById('btnName').classList.toggle('active', currentSort === 'name');
       document.getElementById('btnYear').classList.toggle('active', currentSort === 'year');
       renderCountryGroupList();
