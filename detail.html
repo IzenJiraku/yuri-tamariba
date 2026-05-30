@@ -37,7 +37,7 @@ body{
 /* ===== TOPBAR ===== */
 .topbar{
   position:fixed; top:0; left:0; width:100%;
-  display:flex; align-items:center; justify-content:space-between; /* 左右両端にきれいに分散配置 */
+  display:flex; align-items:center; justify-content:space-between;
   padding:15px 25px; background:rgba(255, 255, 255, 0.3);
   backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(255, 255, 255, 0.2); z-index:1000;
@@ -68,6 +68,8 @@ body{
   .container { padding-top: 100px; }
   .visual-side { width: 180px; margin: 0 auto; }
   .logo { font-size: 15px; letter-spacing: 0.2em; }
+  .action-group { flex-direction: column; align-items: stretch !important; gap: 12px; }
+  .external-link, .bookshelf-btn { text-align: center; justify-content: center; }
 }
 
 .visual-side { width: 240px; flex-shrink: 0; }
@@ -88,25 +90,80 @@ body{
 
 .description { font-size: 15px; color: #444; white-space: pre-wrap; margin-bottom: 35px; line-height: 2; }
 
+/* ===== BUTTONS ===== */
+.action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
 /* 外部リンクボタン */
 .external-link {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 24px;
-  background: rgba(74, 106, 122, 0.1);
-  border: 1px solid rgba(74, 106, 122, 0.2);
+  padding: 12px 26px;
+  background: rgba(74, 106, 122, 0.08);
+  border: 1px solid rgba(74, 106, 122, 0.15);
   border-radius: 30px;
   color: #4a6a7a;
   text-decoration: none;
   font-size: 13px;
-  transition: all 0.3s ease;
+  letter-spacing: 0.03em;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .external-link:hover {
-  background: rgba(74, 106, 122, 0.2);
+  background: rgba(74, 106, 122, 0.18);
+  border-color: rgba(74, 106, 122, 0.3);
   transform: translateY(-2px);
 }
 .external-link svg { width: 14px; height: 14px; }
+
+/* 本棚ボタン（通常時） */
+.bookshelf-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 26px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(74, 106, 122, 0.2);
+  border-radius: 30px;
+  color: #5a7a8a;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.bookshelf-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(121, 197, 228, 0.6);
+  color: #3a5a6a;
+  transform: translateY(-2px);
+  letter-spacing: 0.14em;
+  box-shadow: 0 10px 20px rgba(121, 197, 228, 0.15);
+}
+
+/* 本棚ボタン（格納済み） */
+.bookshelf-btn.in-bookshelf {
+  background: linear-gradient(135deg, rgba(121, 197, 228, 0.15), rgba(255, 255, 255, 0.4));
+  border-color: transparent;
+  color: #4a6a7a;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  box-shadow: inset 0 1px 3px rgba(255,255,255,0.5);
+}
+
+.bookshelf-btn.in-bookshelf:hover {
+  background: linear-gradient(135deg, rgba(121, 197, 228, 0.25), rgba(255, 255, 255, 0.5));
+  transform: translateY(-1px);
+  letter-spacing: 0.08em;
+  box-shadow: 0 5px 15px rgba(121, 197, 228, 0.1);
+}
 
 #loading { text-align: center; padding: 100px; font-size: 14px; color: #4a6a7a; letter-spacing: 0.2em; }
 
@@ -122,9 +179,7 @@ body{
 </div>
 
 <div class="topbar">
-  <!-- 左側：ブラウザバックの挙動で確実に直前（一覧）へ戻り、スクロール位置を完全復元 -->
   <a href="#" class="back-btn" onclick="history.back(); return false;">← 戻る</a>
-  <!-- 右側：ホームロゴ -->
   <a href="index.html" class="logo">百合のたまりば</a>
 </div>
 
@@ -169,6 +224,12 @@ function renderDetail(m) {
   document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 
   const area = document.getElementById('contentArea');
+  
+  // 関係性のタグ生成処理
+  const relationshipTags = (m.Relationship || "").split(/[,、]/).filter(Boolean).map(t => `<span class="tag">${t.trim()}</span>`).join('');
+  // 雰囲気のタグ生成処理
+  const moodTags = movieMoods.map(t => `<span class="tag">#${t.trim()}</span>`).join('');
+
   area.innerHTML = `
     <div class="detail-card">
       <div class="visual-side">
@@ -183,21 +244,61 @@ function renderDetail(m) {
         <h1 class="title">${m.Title}</h1>
         
         <div class="tag-box">
-          ${(m.Relationship || "").split(/[,、]/).filter(Boolean).map(t => `<span class="tag">${t.trim()}</span>`).join('')}
-          ${movieMoods.map(t => `<span class="tag">#${t.trim()}</span>`).join('')}
+          ${relationshipTags}
+          ${moodTags}
         </div>
 
         <div class="description">${m.Comment || 'まだコメントが流れ着いていないみたい。'}</div>
         
-        ${m.Link ? `
-          <a href="${m.Link}" target="_blank" class="external-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            作品の詳細情報をのぞいてみる
-          </a>
-        ` : ''}
+        <div class="action-group">
+          ${m.Link ? `
+            <a href="${m.Link}" target="_blank" class="external-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              作品の詳細情報をのぞいてみる
+            </a>
+          ` : ''}
+
+          <button type="button" id="bookshelfBtn" class="bookshelf-btn" onclick="toggleBookshelf('${encodeURIComponent(m.Title)}')">
+            <span class="btn-text">＜本棚に置く＞</span>
+          </button>
+        </div>
       </div>
     </div>
   `;
+
+  // ページ読み込み時にすでに本棚に入っているか確認して見た目を変更
+  checkBookshelfState(m.Title);
+}
+
+// 本棚のデータ状態を確認してボタンの表示を切り替え
+function checkBookshelfState(title) {
+  const btn = document.getElementById('bookshelfBtn');
+  if (!btn) return;
+
+  let bookshelf = JSON.parse(localStorage.getItem('yuri_bookshelf')) || [];
+
+  if (bookshelf.includes(title)) {
+    btn.classList.add('in-bookshelf');
+    btn.querySelector('.btn-text').innerText = '本棚に置いています';
+  } else {
+    btn.classList.remove('in-bookshelf');
+    btn.querySelector('.btn-text').innerText = '本棚に置く';
+  }
+}
+
+// ボタンが押されたときに保存・削除を切り替え
+function toggleBookshelf(encodedTitle) {
+  const title = decodeURIComponent(encodedTitle);
+  let bookshelf = JSON.parse(localStorage.getItem('yuri_bookshelf')) || [];
+
+  if (bookshelf.includes(title)) {
+    bookshelf = bookshelf.filter(t => t !== title);
+  } else {
+    bookshelf.push(title);
+  }
+
+  localStorage.setItem('yuri_bookshelf', JSON.stringify(bookshelf));
+  checkBookshelfState(title);
 }
 </script>
 
