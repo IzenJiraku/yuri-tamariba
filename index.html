@@ -409,12 +409,23 @@ let isSpoilerRelOpen = false;
 let theaterInterval = null; 
 
 fetch(url).then(r => r.json()).then(d => {
-  movies = d;
+
+  movies = d.filter(m => {
+    const value = (m["公開"] || "").toString().trim().toLowerCase();
+
+    return (
+      value === "true" ||
+      value === "公開" ||
+      value === "1" ||
+      value === "yes"
+    );
+  });
+
   buildFilterButtons();
   restoreUI();
   render();
-}).catch(e => console.error("データにたどり着けませんでした:", e));
 
+}).catch(e => console.error("データにたどり着けませんでした:", e));
 function buildFilterButtons() {
   const countries = new Set();
   const formats = new Set();
