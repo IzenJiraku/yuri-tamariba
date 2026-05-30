@@ -274,22 +274,51 @@
     }
     .theater-mode.show { opacity: 1; pointer-events: auto; }
     
-    .theater-card-wrapper {
-      max-width: 450px; width: 100%; text-align: center;
-      opacity: 0; transform: translateY(15px);
-      transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-    }
+    .theater-card-wrapper{
+  width:100%;
+  max-width:420px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  opacity:0;
+  transform:translateY(15px);
+
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s cubic-bezier(0.22,1,0.36,1);
+}
     .theater-card-wrapper.visible { opacity: 1; transform: translateY(0); }
 
-    .theater-img {
-      width: 130px; height: 182px; margin: 0 auto 30px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-radius: 12px;
-      overflow: hidden; background: rgba(255,255,255,0.3);
-    }
+    .theater-img{
+  width:180px;
+  height:252px;
+  margin:0 auto 25px;
+
+  box-shadow:0 15px 40px rgba(0,0,0,0.15);
+  border-radius:12px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.3);
+}
     .theater-img img { width: 100%; height: 100%; object-fit: cover; }
     .theater-meta { font-size: 13px; color: #3d5664; opacity: 0.9; letter-spacing: 0.1em; margin-bottom: 12px; } 
-    .theater-title { font-size: 24px; font-weight: 500; color: #1e3542; line-height: 1.5; margin: 0 0 20px 0; } 
-    .theater-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 40px; max-width: 90%; margin-left: auto; margin-right: auto;}
+   .theater-title{
+  font-size:26px;
+  font-weight:500;
+  color:#1e3542;
+  line-height:1.5;
+  margin:0 0 15px;
+}
+   .theater-tags{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+
+  max-width:360px;
+  margin:0 auto;
+}
     .theater-tag-item { font-size: 11px; background: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 12px; color: #2e4450; border: 1px solid rgba(255,255,255,0.8); font-weight: 500; } 
 
     .theater-close-btn {
@@ -821,55 +850,108 @@ function closeRandomModal() {
 }
 
 function startTheaterMode() {
+
   if (!movies || movies.length === 0) return;
-  
+
   document.getElementById("menu").classList.remove("open");
   document.getElementById("overlay").classList.remove("show");
 
   document.getElementById("topbar").classList.add("ui-hidden");
   document.getElementById("mainContainer").classList.add("ui-hidden");
+
   document.getElementById("bgDecor").style.opacity = "0.15";
   document.getElementById("theaterMode").classList.add("show");
 
-  let index = 0;
   const wrapper = document.getElementById("theaterCardWrapper");
 
+  let shuffledMovies = [...movies].sort(() => Math.random() - 0.5);
+
+  let index = 0;
+
   function showNext() {
+
     wrapper.classList.remove("visible");
-    
+
     setTimeout(() => {
-      const m = movies[index];
+
+      const m = shuffledMovies[index];
+
       const title = m.Title || "";
       const country = m.Country || "";
       const format = m.Format || "";
-      const comment = m.Comment || "";
-      const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
-      
-      const relationshipTags = (m.Relationship || "").split(/[,、，・\s]/).filter(Boolean).map(t => `<span class="theater-tag-item">${t.trim()}</span>`).join('');
-      const moodTags = (m.Mood || "").split(/[,、]/).filter(Boolean).map(t => `<span class="theater-tag-item">#${t.trim()}</span>`).join('');
+
+      const imgSrc =
+        (m.Image && m.Image.trim() !== "")
+          ? m.Image
+          : "";
+
+      const relationshipTags =
+        (m.Relationship || "")
+          .split(/[,、，・\s]/)
+          .filter(Boolean)
+          .map(t =>
+            `<span class="theater-tag-item">${t.trim()}</span>`
+          )
+          .join('');
+
+      const moodTags =
+        (m.Mood || "")
+          .split(/[,、]/)
+          .filter(Boolean)
+          .map(t =>
+            `<span class="theater-tag-item">#${t.trim()}</span>`
+          )
+          .join('');
 
       wrapper.innerHTML = `
-        <div class="theater-img" onclick="location.href='detail.html?title=${encodeURIComponent(title)}'" style="cursor:pointer;">
-          <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
+        <div
+          class="theater-img"
+          onclick="location.href='detail.html?title=${encodeURIComponent(title)}'"
+          style="cursor:pointer;"
+        >
+          <img
+            src="${imgSrc}"
+            onerror="this.style.opacity='0'"
+            alt=""
+          >
         </div>
-        <div class="theater-meta">${country} / ${format}</div>
-        <h2 class="theater-title" onclick="location.href='detail.html?title=${encodeURIComponent(title)}'" style="cursor:pointer;">${title}</h2>
+
+        <div class="theater-meta">
+          ${country} / ${format}
+        </div>
+
+        <h2
+          class="theater-title"
+          onclick="location.href='detail.html?title=${encodeURIComponent(title)}'"
+          style="cursor:pointer;"
+        >
+          ${title}
+        </h2>
+
         <div class="theater-tags">
           ${relationshipTags}
           ${moodTags}
         </div>
-        <div style="font-size:14px; color:#3d5664; max-width:380px; margin:0 auto; line-height:1.9; white-space:pre-wrap; text-align:left; background:rgba(255,255,255,0.4); padding:20px; border-radius:16px;">${comment || 'まだコメントが届いていません。'}</div>
       `;
-      
+
       wrapper.classList.add("visible");
-      index = (index + 1) % movies.length;
+
+      index++;
+
+      if (index >= shuffledMovies.length) {
+        shuffledMovies =
+          [...movies].sort(() => Math.random() - 0.5);
+
+        index = 0;
+      }
+
     }, 1200);
   }
 
   showNext();
+
   theaterInterval = setInterval(showNext, 9000);
 }
-
 function stopTheaterMode() {
   clearInterval(theaterInterval);
   document.getElementById("theaterMode").classList.remove("show");
