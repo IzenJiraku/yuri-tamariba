@@ -176,7 +176,7 @@
     input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
     input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: rgba(74, 106, 122, 0.3); }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #fff; border: 1px solid #79c5e4; margin-top: -11px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    #depthLabel { font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; color: #2e4450; font-weight: 500; } 
+    id="depthLabel" { font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; color: #2e4450; font-weight: 500; } 
 
     /* ===== RESULTS ===== */
     .results{ display:grid; gap:18px; margin-top: 25px; }
@@ -327,6 +327,7 @@
     <a href="list.html" class="menu-link-item">作品一覧を見てみる</a>
     <button class="menu-btn-item" onclick="showRandomMovie()">偶然の出会いに委ねる</button>
     <button class="menu-btn-item" onclick="startTheaterMode()">スライドショー</button>
+    <a href="bookshelf.html" class="menu-link-item">本棚をのぞく</a>
   </div>
 
   <div class="menu-footer-group">
@@ -426,6 +427,7 @@ fetch(url).then(r => r.json()).then(d => {
   render();
 
 }).catch(e => console.error("データにたどり着けませんでした:", e));
+
 function buildFilterButtons() {
   const countries = new Set();
   const formats = new Set();
@@ -441,7 +443,6 @@ function buildFilterButtons() {
     }
   });
 
-  // 1. 国ボタンの自動生成（「その他…？」アコーディオンボタンへの変更）
   const preferredCountries = ["日本", "韓国", "台湾"];
   const currentCountries = Array.from(countries);
   
@@ -462,12 +463,10 @@ function buildFilterButtons() {
   }
   document.getElementById("countryGrid").innerHTML = countryHtml;
 
-  // 2. 媒体（Format）ボタンの完全自動生成
   document.getElementById("formatGrid").innerHTML = Array.from(formats).map(f => 
     `<div class="card" data-value="${f}" onclick="toggleFilter('format','${f}',this)">${f}</div>`
   ).join("");
 
-  // 3. 関係性（Relationship）ボタンの自動生成
   const preferredRels = ["恋愛", "友愛", "連帯"];
   const currentRels = Array.from(relationships);
   
@@ -698,7 +697,6 @@ function clearFilters() {
   render();
 }
 
-// フィルタやスライドショー、その他ロジックなどの大切な処理は一切触っていません
 function getFilteredMovies(){
   if (state.country.length === 0 && state.format.length === 0 && state.rel.length === 0) return null;
 
@@ -830,57 +828,50 @@ function startTheaterMode() {
 
   document.getElementById("topbar").classList.add("ui-hidden");
   document.getElementById("mainContainer").classList.add("ui-hidden");
-  document.getElementById("bgDecor").style.opacity = "0";
+  document.getElementById("bgDecor").style.opacity = "0.15";
+  document.getElementById("theaterMode").classList.add("show");
 
-  const theater = document.getElementById("theaterMode");
-  theater.classList.add("show");
-
-  nextTheaterSlide();
-  theaterInterval = setInterval(nextTheaterSlide, 5000);
-}
-
-function nextTheaterSlide() {
+  let index = 0;
   const wrapper = document.getElementById("theaterCardWrapper");
-  wrapper.classList.remove("visible");
 
-  setTimeout(() => {
-    const randomIndex = Math.floor(Math.random() * movies.length);
-    const m = movies[randomIndex];
+  function showNext() {
+    wrapper.classList.remove("visible");
+    
+    setTimeout(() => {
+      const m = movies[index];
+      const title = m.Title || "";
+      const country = m.Country || "";
+      const format = m.Format || "";
+      const comment = m.Comment || "";
+      const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
+      
+      const relationshipTags = (m.Relationship || "").split(/[,、，・\s]/).filter(Boolean).map(t => `<span class="theater-tag-item">${t.trim()}</span>`).join('');
+      const moodTags = (m.Mood || "").split(/[,、]/).filter(Boolean).map(t => `<span class="theater-tag-item">#${t.trim()}</span>`).join('');
 
-    const title = m.Title || "";
-    const country = m.Country || "";
-    const format = m.Format || "";
-    const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
+      wrapper.innerHTML = `
+        <div class="theater-img" onclick="location.href='detail.html?title=${encodeURIComponent(title)}'" style="cursor:pointer;">
+          <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
+        </div>
+        <div class="theater-meta">${country} / ${format}</div>
+        <h2 class="theater-title" onclick="location.href='detail.html?title=${encodeURIComponent(title)}'" style="cursor:pointer;">${title}</h2>
+        <div class="theater-tags">
+          ${relationshipTags}
+          ${moodTags}
+        </div>
+        <div style="font-size:14px; color:#3d5664; max-width:380px; margin:0 auto; line-height:1.9; white-space:pre-wrap; text-align:left; background:rgba(255,255,255,0.4); padding:20px; border-radius:16px;">${comment || 'まだコメントが届いていません。'}</div>
+      `;
+      
+      wrapper.classList.add("visible");
+      index = (index + 1) % movies.length;
+    }, 1200);
+  }
 
-    let tagsArr = [];
-    if (m.Relationship) m.Relationship.split(/[,、，・\s]/).forEach(r => { if(r && r.trim()) tagsArr.push(r.trim()); });
-    if (m.Mood) m.Mood.split(/[,、]/).forEach(mood => { if(mood.trim()) tagsArr.push(mood.trim()); });
-
-    wrapper.innerHTML = `
-  <a href="detail.html?title=${encodeURIComponent(title)}"
-     style="display:block;text-decoration:none;color:inherit;">
-
-    <div class="theater-img">
-      <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
-    </div>
-
-    <div class="theater-meta">${country} / ${format}</div>
-
-    <h2 class="theater-title">${title}</h2>
-
-    <div class="theater-tags">
-      ${tagsArr.map(t => `<span class="theater-tag-item">${t}</span>`).join("")}
-    </div>
-
-  </a>
-`;
-    wrapper.classList.add("visible");
-  }, 400);
+  showNext();
+  theaterInterval = setInterval(showNext, 9000);
 }
 
 function stopTheaterMode() {
   clearInterval(theaterInterval);
-  
   document.getElementById("theaterMode").classList.remove("show");
   document.getElementById("topbar").classList.remove("ui-hidden");
   document.getElementById("mainContainer").classList.remove("ui-hidden");
