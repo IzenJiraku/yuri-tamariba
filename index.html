@@ -176,7 +176,7 @@
     input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
     input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: rgba(74, 106, 122, 0.3); }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #fff; border: 1px solid #79c5e4; margin-top: -11px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    id="depthLabel" { font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; color: #2e4450; font-weight: 500; } 
+    #depthLabel { font-size: 14px; margin-top: 15px; letter-spacing: 0.3em; color: #2e4450; font-weight: 500; } 
 
     /* ===== RESULTS ===== */
     .results{ display:grid; gap:18px; margin-top: 25px; }
@@ -197,12 +197,12 @@
 
     /* ===== MENU & SEARCH ===== */
     .menu{ 
-      position:fixed; top:0; left:-340px; width:300px; height:100vh; 
+      position:fixed; top:0; right:-340px; width:300px; height:100vh; 
       background:rgba(255, 255, 255, 0.98); padding:100px 30px 60px; 
       transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index:2000; 
       overflow-y: auto; display: flex; flex-direction: column;
     }
-    .menu.open{ left:0; }
+    .menu.open{ right:0; left: auto; }
     
     .search{ 
       width:100%; padding:14px 0; border:none; border-bottom:2px solid #b3dae8; 
@@ -275,50 +275,21 @@
     .theater-mode.show { opacity: 1; pointer-events: auto; }
     
     .theater-card-wrapper{
-  width:100%;
-  max-width:420px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-
-  opacity:0;
-  transform:translateY(15px);
-
-  transition:
-    opacity 1.2s ease,
-    transform 1.2s cubic-bezier(0.22,1,0.36,1);
-}
+      width:100%; max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center;
+      opacity:0; transform:translateY(15px); text-decoration: none; color: inherit; cursor: pointer;
+      transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.22,1,0.36,1);
+    }
     .theater-card-wrapper.visible { opacity: 1; transform: translateY(0); }
 
     .theater-img{
-  width:180px;
-  height:252px;
-  margin:0 auto 25px;
-
-  box-shadow:0 15px 40px rgba(0,0,0,0.15);
-  border-radius:12px;
-  overflow:hidden;
-  background:rgba(255,255,255,0.3);
-}
+      width:180px; height:252px; margin:0 auto 25px;
+      box-shadow:0 15px 40px rgba(0,0,0,0.15); border-radius:12px;
+      overflow:hidden; background:rgba(255,255,255,0.3);
+    }
     .theater-img img { width: 100%; height: 100%; object-fit: cover; }
     .theater-meta { font-size: 13px; color: #3d5664; opacity: 0.9; letter-spacing: 0.1em; margin-bottom: 12px; } 
-   .theater-title{
-  font-size:26px;
-  font-weight:500;
-  color:#1e3542;
-  line-height:1.5;
-  margin:0 0 15px;
-}
-   .theater-tags{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:8px;
-
-  max-width:360px;
-  margin:0 auto;
-}
+    .theater-title{ font-size:26px; font-weight:500; color:#1e3542; line-height:1.5; margin:0 0 15px; }
+    .theater-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; max-width:360px; margin:0 auto; }
     .theater-tag-item { font-size: 11px; background: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 12px; color: #2e4450; border: 1px solid rgba(255,255,255,0.8); font-weight: 500; } 
 
     .theater-close-btn {
@@ -326,7 +297,7 @@
       background: rgba(255,255,255,0.4); border: 1px solid #2e4450; color: #2e4450; 
       padding: 12px 30px; font-size: 12px; border-radius: 30px;
       cursor: pointer; letter-spacing: 0.2em; opacity: 0.8;
-      transition: all 0.4s; font-family: inherit;
+      transition: all 0.4s; font-family: inherit; z-index: 3100;
     }
     .theater-close-btn:hover { opacity: 1; background: rgba(255,255,255,0.6); }
 
@@ -419,7 +390,7 @@
 </div>
 
 <div class="theater-mode" id="theaterMode">
-  <div class="theater-card-wrapper" id="theaterCardWrapper"></div>
+  <a class="theater-card-wrapper" id="theaterCardWrapper"></a>
   <button class="theater-close-btn" onclick="stopTheaterMode()">ホームに戻る</button>
 </div>
 
@@ -849,8 +820,8 @@ function closeRandomModal() {
   document.getElementById("overlay").classList.remove("show");
 }
 
+/* シアターモード関連 */
 function startTheaterMode() {
-
   if (!movies || movies.length === 0) return;
 
   document.getElementById("menu").classList.remove("open");
@@ -860,98 +831,43 @@ function startTheaterMode() {
   document.getElementById("mainContainer").classList.add("ui-hidden");
 
   document.getElementById("bgDecor").style.opacity = "0.15";
-  document.getElementById("theaterMode").classList.add("show");
+  
+  const mode = document.getElementById("theaterMode");
+  mode.classList.add("show");
 
   const wrapper = document.getElementById("theaterCardWrapper");
-
-  let shuffledMovies = [...movies].sort(() => Math.random() - 0.5);
-
-  let index = 0;
-
-  function showNext() {
-
+  
+  const renderTheaterCard = () => {
     wrapper.classList.remove("visible");
-
     setTimeout(() => {
-
-      const m = shuffledMovies[index];
-
+      const m = movies[Math.floor(Math.random() * movies.length)];
       const title = m.Title || "";
       const country = m.Country || "";
       const format = m.Format || "";
+      const imgSrc = (m.Image && m.Image.trim() !== "") ? m.Image : "";
+      const rels = (m.Relationship || "").split(/[,、，・\s]/).map(r => r.trim()).filter(Boolean);
 
-      const imgSrc =
-        (m.Image && m.Image.trim() !== "")
-          ? m.Image
-          : "";
-
-      const relationshipTags =
-        (m.Relationship || "")
-          .split(/[,、，・\s]/)
-          .filter(Boolean)
-          .map(t =>
-            `<span class="theater-tag-item">${t.trim()}</span>`
-          )
-          .join('');
-
-      const moodTags =
-        (m.Mood || "")
-          .split(/[,、]/)
-          .filter(Boolean)
-          .map(t =>
-            `<span class="theater-tag-item">#${t.trim()}</span>`
-          )
-          .join('');
+      // 修正部分: ラッパー要素(aタグ)に正しい作品情報へのhref属性を動的にセット
+      wrapper.setAttribute("href", `detail.html?title=${encodeURIComponent(title)}`);
 
       wrapper.innerHTML = `
-        <div
-          class="theater-img"
-          onclick="location.href='detail.html?title=${encodeURIComponent(title)}'"
-          style="cursor:pointer;"
-        >
-          <img
-            src="${imgSrc}"
-            onerror="this.style.opacity='0'"
-            alt=""
-          >
+        <div class="theater-img">
+          <img src="${imgSrc}" onerror="this.style.opacity='0'" alt="">
         </div>
-
-        <div class="theater-meta">
-          ${country} / ${format}
-        </div>
-
-        <h2
-          class="theater-title"
-          onclick="location.href='detail.html?title=${encodeURIComponent(title)}'"
-          style="cursor:pointer;"
-        >
-          ${title}
-        </h2>
-
+        <div class="theater-meta">${country} / ${format}</div>
+        <h2 class="theater-title">${title}</h2>
         <div class="theater-tags">
-          ${relationshipTags}
-          ${moodTags}
+          ${rels.map(r => `<span class="theater-tag-item">${r}</span>`).join("")}
         </div>
       `;
-
       wrapper.classList.add("visible");
+    }, 400);
+  };
 
-      index++;
-
-      if (index >= shuffledMovies.length) {
-        shuffledMovies =
-          [...movies].sort(() => Math.random() - 0.5);
-
-        index = 0;
-      }
-
-    }, 1200);
-  }
-
-  showNext();
-
-  theaterInterval = setInterval(showNext, 9000);
+  renderTheaterCard();
+  theaterInterval = setInterval(renderTheaterCard, 5000);
 }
+
 function stopTheaterMode() {
   clearInterval(theaterInterval);
   document.getElementById("theaterMode").classList.remove("show");
