@@ -16,7 +16,7 @@ body{
   color:#2b2b2b;
   font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
   overflow-x: hidden;
-  line-height: 2; /* 文章を読みやすくするため少し広めに */
+  line-height: 1.8;
   min-height: 100vh;
 }
 
@@ -64,7 +64,6 @@ body{
   font-size: 22px; font-weight: 300; color: #3a5a6a; letter-spacing: 0.2em; margin-bottom: 25px;
 }
 
-/* 追加：ロゴ画像のスタイル */
 .about-logo-container {
   margin-bottom: 35px;
   display: flex;
@@ -72,7 +71,7 @@ body{
   align-items: center;
 }
 .about-logo-img {
-  height: 120px; /* 紹介ページ用に少し小ぶりに調整 */
+  height: 120px;
   width: auto;
   object-fit: contain;
   opacity: 0.85;
@@ -108,6 +107,55 @@ body{
   box-shadow: 0 8px 20px rgba(74, 106, 122, 0.05);
 }
 
+/* ===== 「最近の更新」エリア（地続きのシンプルデザイン） ===== */
+.updates-section {
+  margin-top: 50px; /* 上のカードからの心地よい余白 */
+  padding: 0 10px;
+}
+.updates-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #3a5a6a;
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+}
+.updates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.updates-item {
+  font-size: 14px;
+  color: #4a4a4a;
+  border-bottom: 1px dashed rgba(74, 106, 122, 0.15);
+  padding-bottom: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.update-date {
+  font-size: 12px;
+  color: #6a8a9a;
+  white-space: nowrap;
+  font-family: sans-serif;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 1px 8px;
+  border-radius: 4px;
+}
+.update-todo {
+  word-break: break-all;
+}
+.updates-loading {
+  font-size: 13px;
+  color: #6a8a9a;
+  letter-spacing: 0.1em;
+}
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 600px) {
@@ -115,7 +163,10 @@ body{
   .container { padding-top: 110px; }
   .logo { font-size: 15px; letter-spacing: 0.2em; }
   .about-text { font-size: 14px; }
-  .about-logo-img { height: 100px; } /* スマホ向けに少し縮小 */
+  .about-logo-img { height: 100px; }
+  .updates-section { margin-top: 40px; }
+  .updates-item { font-size: 13px; gap: 8px; }
+  .update-date { font-size: 11px; padding: 1px 6px; }
 }
 </style>
 </head>
@@ -128,9 +179,7 @@ body{
 </div>
 
 <div class="topbar">
-  <!-- 左側：1ページ前に戻る -->
   <a href="#" class="back-btn" onclick="history.back(); return false;">← 戻る</a>
-  <!-- 右側：ホームロゴ -->
   <a href="index.html" class="logo">百合のたまりば</a>
 </div>
 
@@ -138,7 +187,6 @@ body{
   <div class="about-card">
     <h1 class="about-title">たまりばについて</h1>
     
-    <!-- 追加：ロゴ画像エリア -->
     <div class="about-logo-container">
       <img src="logo.png" alt="百合のたまりば ロゴ" class="about-logo-img">
     </div>
@@ -148,10 +196,16 @@ body{
       <p>今は管理人が好きな作品を収めている段階なので、まだまだ十分な作品数ではありません。<br>みなさまからの耳打ちで少しずつ育っていくサイトです。</p>
     </div>
     
-    <!-- 耳打ちボタン（ href="" の中に、GoogleフォームやWavebox、マシュマロなどのURLを入れてください ） -->
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSdX4mou3VF1YV12yk7pMq7JWqekHbHNuhw7ufK0gxOhdJxo4Q/viewform?usp=header" target="_blank" class="whisper-link">
       <span>こちらから好きな作品をそっと耳打ちしてみませんか。</span>
     </a>
+  </div>
+
+  <div class="updates-section">
+    <h2 class="updates-title">最近の更新</h2>
+    <ul id="updatesList" class="updates-list">
+      <li class="updates-loading">更新情報を読み込んでいます...</li>
+    </ul>
   </div>
 </div>
 
@@ -165,6 +219,45 @@ if (savedState && savedState.depth) {
   const b = 247 - (val - 1) * 10;
   document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 }
+
+// ===== 「やること」シートから完了データを取得するスクリプト =====
+document.addEventListener("DOMContentLoaded", () => {
+  const todoSheetUrl = "https://opensheet.elk.sh/1Q-FkmH9rDdKHDlqSwtX1ILOpWOdVRygT0HrTJyQjBGU/やること";
+  const updatesList = document.getElementById("updatesList");
+
+  fetch(todoSheetUrl)
+    .then(r => r.json())
+    .then(data => {
+      // 進捗列が「完了」になっているデータのみを抽出
+      const completedTasks = data.filter(item => item["進捗"] === "完了");
+
+      if (!completedTasks || completedTasks.length === 0) {
+        updatesList.innerHTML = '<li class="updates-loading">最近の更新情報はありません。</li>';
+        return;
+      }
+
+      // 最新の5件をピックアップ（スプレッドシートの下部にあるものが新しいと想定）
+      // もし最新順ではなくシートの並びのまま表示したい場合は .reverse() を消してください
+      const latestUpdates = completedTasks.slice(-5).reverse();
+
+      // HTMLを生成
+      updatesList.innerHTML = latestUpdates.map(item => {
+        const dateText = item["日付"] || "----/--/--";
+        const todoText = item["ToDo"] || "";
+        
+        return `
+          <li class="updates-item">
+            <span class="update-date">${dateText}</span>
+            <span class="update-todo">${todoText}</span>
+          </li>
+        `;
+      }).join('');
+    })
+    .catch(e => {
+      console.error(e);
+      updatesList.innerHTML = '<li class="updates-loading">更新情報の読み込みに失敗しました。</li>';
+    });
+});
 </script>
 
 </body>
